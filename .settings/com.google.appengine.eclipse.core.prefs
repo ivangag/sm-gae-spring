@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+filesCopiedToWebInfLib=
+gaeDatanucleusVersion=v2
+gaeDoJarClasses=false
+gaeEnableJarSplitting=true
+gaeRetainStagingDirectory=false
+googleCloudSqlEnabled=false
+localDevMySqlEnabled=true
