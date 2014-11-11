@@ -78,10 +78,6 @@ public class PatientEndPoint {
 		checkIn.setPatientMedicalNumber(username); 
 		CheckIn check = checkIns.save(checkIn);
 		
-		//TEST GCM notification generation
-		boolean success = true;
-		String resultInfo = "";
-		
 		//here we should retrieve the doctors of patient and related gcm_reg_id(s)
 		List<Doctor> doctorList = (List<Doctor>) doctors.findByPatientMedicalNumber(username);
 		List<String> doctors_reg_ids = new ArrayList<String>();
@@ -94,40 +90,11 @@ public class PatientEndPoint {
 				doctorsInfo.add(doctor.toString());
 			}
 		}
-		//for(String regId : doctors_reg_ids){
-			GcmMessage message = new GcmMessage();		
-			message.setRegistration_ids(doctors_reg_ids);
-			//message.addRegistrationId(gcm_reg_id_doctor_test);
-			//message.addRegistrationId(regId);
-			GcmData dataMsg = new GcmData();
-			dataMsg.setAction(GcmConstants.GCM_ACTION_CHECKIN_RX);
-			dataMsg.setUserName(username);
-			dataMsg.setUserType(UserType.PATIENT);
-			message.setData(dataMsg);	
-			
-			try{
-				final GcmResponse gcmResponse = GcmClientRequest.get().getApi().
-					 sendMessage(GcmConstants.GCM_PROJECT_AUTHORIZATION_KEY, message);
-				resultInfo = gcmResponse.toString();
-			}catch(Exception error){
-				success = false;
-				resultInfo = error.getMessage();
-				System.out.print("addCheckIn=>GCMSendError:" + resultInfo);
-			}
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date today = Calendar.getInstance().getTime(); 
-			GcmTrack gcmTrack = new GcmTrack();
-			gcmTrack.setDate(df.format(today));
-			gcmTrack.setGcmDestinationIds(message.getRegistration_ids());
-			gcmTrack.setBundleContent(dataMsg.toString() + "\n\n" + doctorsInfo);
-			gcmTrack.setResultInfo(resultInfo.substring(0, 
-					resultInfo.length() < 495 ? resultInfo.length() : 495));
-			gcmTrack.setSuccess(success);	
-			gcmTracks.save(gcmTrack);
-		//}
-		
-		//---------------------------------------------------------------------------------------------
-		
+		if(!doctors_reg_ids.isEmpty()){
+			gcmTracks.save(
+					GcmClientRequest.get().PostGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, username, UserType.PATIENT, doctors_reg_ids, doctorsInfo)
+					);
+		}
 		return check;
 	}
 	
@@ -145,8 +112,6 @@ public class PatientEndPoint {
 	public @ResponseBody Collection<PainMedication> findPainMedicationsByPatient(
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber){		
 		return medications.findByPatientMedicalNumber(medicalRecordNumber);
-		//Collection<PainMedication> resList = new ArrayList<PainMedication>(){};
-		//return (Collection<PainMedication>) medications.findAll();
 	}
 	
 	@Secured("ROLE_PATIENT")

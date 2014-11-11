@@ -4,16 +4,15 @@ public class UserInfo {
 	
 	private UserType userType = UserType.UNKWOWN;
 	
-	private boolean isLogged;
+	private boolean logged;
 	
-	private boolean isAnagPresent;
+	private boolean anagPresent;
 	
 	private String userIdentification;
 		
 	private String firstName;
 	
 	private String lastName;
-	//private T userExtra;
 
 	public UserType getUserType() {
 		return userType;
@@ -23,12 +22,12 @@ public class UserInfo {
 		this.userType = userType;
 	}
 	
-	public boolean isLogged() {
-		return isLogged;
+	public boolean getLogged() {
+		return logged;
 	}
 
-	public void setLogged(boolean isLogged) {
-		this.isLogged = isLogged;
+	public void setLogged(boolean logged) {
+		this.logged = logged;
 	}
 
 	public String getFirstName() {
@@ -54,7 +53,7 @@ public class UserInfo {
 		return sb.append(this.firstName).append("-")
 				.append(this.lastName).append("-")
 				.append(this.getUserIdentification()).append("-")
-				.append(this.isLogged)
+				.append(this.logged)
 				.toString();
 	}
 
@@ -67,11 +66,11 @@ public class UserInfo {
 	}
 
 	public boolean getAnagPresent() {
-		return isAnagPresent;
+		return anagPresent;
 	}
 
-	public void setAnagPresent(boolean isAnagPresent) {
-		this.isAnagPresent = isAnagPresent;
+	public void setAnagPresent(boolean anagPresent) {
+		this.anagPresent = anagPresent;
 	}
 
 }

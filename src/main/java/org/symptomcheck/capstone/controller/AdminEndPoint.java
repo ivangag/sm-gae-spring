@@ -221,6 +221,14 @@ public class AdminEndPoint {
 			@PathVariable("uniqueDoctorID") String uniqueDoctorID) {		
 		return doctors.findOne(uniqueDoctorID);
 	}	
+	
+	
+	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
+	@RequestMapping(value=SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}", method=RequestMethod.GET)	
+	public @ResponseBody Patient findPatientByMedicalRecordNumber(
+			@PathVariable("medicalRecordNumber") String medicalRecordNumber) {		
+		return patients.findOne(medicalRecordNumber);
+	}		
 
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@RequestMapping(value=SymptomManagerSvcApi.PATIENT_SVC_PATH, method=RequestMethod.GET)	
