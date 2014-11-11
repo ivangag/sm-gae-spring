@@ -47,9 +47,9 @@ public class PopulateDataBaseTest {
 		}
 	}
 
-	private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
+	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
 	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080/symptom-management-capstone-0.0.4";
-	//private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
+	private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	private final String TEST_URL_REMOTE_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	
 	private final String USERNAME = "admin";
@@ -304,12 +304,14 @@ public class PopulateDataBaseTest {
 	@Test
 	public void addCheckIns(){
 		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
+		/*
 		Doctor doctor = symptomSvcASDoctor1.findDoctorByUniqueDoctorID(doctor1User.getUniqueDoctorId());
 		for(String gcmId : doctor.getGcmRegistrationIds()){
 			//String gcmId2 = gcmId.replace("\"", "");
 			symptomSvcASDoctor1.clearGCMRegistration(gcmId.replace("\"", ""));
-		}
+		}*/
 		Map<String,String> meds = new HashMap<String,String>();
+		
 		
 		meds.put("LOXAN","YES");
 		meds.put("ORTYCIN","YES");
@@ -407,5 +409,53 @@ public class PopulateDataBaseTest {
 		String gcmRegistrationId = "Doctor1GCMId_" + UUID.randomUUID();
 		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
 		
+	}
+	
+	//@Test
+	public void loginAndSynchronizationFlow(){
+		
+		//**********PATIENT*****************///
+		UserInfo user= null;
+		//login
+		try{
+			user = symptomSvcAsPatient1.verifyUser();
+		}catch(RetrofitError error){
+			
+		}
+		if((user != null && user.getLogged())){
+			final String userName =	user.getUserIdentification();
+			//retrieve and save info...
+			//1.Patient detail
+			Patient patient = symptomSvcAsPatient1.findPatientByMedicalRecordNumber(userName);		
+			//2.Check-Ins
+			List<CheckIn> checkIns = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(userName);		
+			//3.Medications
+			List<PainMedication> medicines = (List<PainMedication>) symptomSvcAsPatient1.findPainMedicationsByPatient(userName);
+		}			
+		
+		//**********DOCTOR******************///
+		 user= null;
+		//login
+		try{
+			user = symptomSvcASDoctor1.verifyUser();
+		}catch(RetrofitError error){
+			
+		}
+		if((user != null && user.getLogged())){
+			final String userName =	user.getUserIdentification();
+			//retrieve and save info...
+			//1.Patient detail
+			Doctor doctor = symptomSvcASDoctor1.findDoctorByUniqueDoctorID(userName);		
+			//2.Patients list
+			List<Patient> patients = (List<Patient>) symptomSvcASDoctor1.findPatientsByDoctor(userName);
+			
+			for(Patient patient : patients){
+				//2.1 Patients' Check-Ins
+				List<CheckIn> checkIns = (List<CheckIn>) symptomSvcASDoctor1.findCheckInsByPatient(patient.getMedicalRecordNumber());
+				//2.2.Medications
+				List<PainMedication> medicines = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient.getMedicalRecordNumber());				
+			}			
+		}			 
+		 
 	}
 }
