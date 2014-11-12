@@ -2,28 +2,34 @@ package org.symptomcheck.capstone.gcm;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.symptomcheck.capstone.client.SymptomGcmMessagingApi;
-import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.GcmTrack;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
 import org.symptomcheck.capstone.repository.UserType;
+
+import com.google.api.client.util.Lists;
 
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.RestAdapter.LogLevel;
 
-
+@Service
 public class GcmClientRequest {
 	
 
+	@Autowired
+	GcmTrackRepository gcmTracks;
+	 
+	
 	public static class ErrorRecorder implements ErrorHandler {
 
 		private RetrofitError error;
@@ -39,10 +45,10 @@ public class GcmClientRequest {
 		}
 	}
 	
-	ExecutorService handlePostRequest = Executors.newFixedThreadPool(4);
+	ExecutorService threadPool = Executors.newFixedThreadPool(4);
 	
-	private static GcmClientRequest instance = new GcmClientRequest();
-	
+	//private static GcmClientRequest instance = new GcmClientRequest();
+	/*
 	public static GcmClientRequest get(){
 		
 		if(gcmClient == null){
@@ -55,6 +61,24 @@ public class GcmClientRequest {
 		
 		}
 		return instance;
+	}*/
+	
+	public GcmClientRequest()
+	{
+		init();
+	}
+	
+	private void init() {
+		// TODO Auto-generated method stub
+		if(gcmClient == null){
+			gcmClient = new RestAdapter.Builder()
+			.setEndpoint(GcmConstants.GCM_MESSAGING_URL)
+			.setLogLevel(LogLevel.FULL)
+			.setErrorHandler(new ErrorRecorder())
+			.build()
+			.create(SymptomGcmMessagingApi.class);
+		
+		}
 	}
 
 	private static SymptomGcmMessagingApi gcmClient = null;
@@ -64,9 +88,18 @@ public class GcmClientRequest {
 		return gcmClient;
 	}
 	
-	public GcmTrack PostGcmMessage(String action, String username, UserType userTrigger,
+	public GcmResponse sendGcmMessage(String action, String username, UserType userTrigger,
+			List<String> regIds, List<String> extraLogInfo){
+				
+		GcmResponse gcmResponse = postMessage(action, username, userTrigger, regIds, extraLogInfo);
+		
+		return gcmResponse;
+	}
+	
+	private GcmResponse postMessage(String action, String username, UserType userTrigger,
 			List<String> regIds, List<String> extraLogInfo){
 		
+		GcmResponse gcmResponse = null;
 		//------------------------------GCM notification generation----------------------------------------//
 		// Need of 
 		// 1) GCM Action, Username, UserType,...
@@ -83,18 +116,8 @@ public class GcmClientRequest {
 		message.setData(dataMsg);	
 		
 		try{
-			final GcmResponse gcmResponse = 
-					GcmClientRequest.get().getApi().sendMessage(GcmConstants.GCM_PROJECT_AUTHORIZATION_KEY, message);
+			gcmResponse = this.getApi().sendMessage(GcmConstants.GCM_PROJECT_AUTHORIZATION_KEY, message);
 			resultInfo = gcmResponse.toString();
-			
-			// try to extract canonical
-			if(Integer.valueOf(gcmResponse.canonical_ids) != null){
-				int canonical_ids = Integer.valueOf(gcmResponse.canonical_ids);
-				
-				for(GcmReponseResult responseResult : gcmResponse.results){
-					
-				}
-			}
 		}catch(Exception error){
 			success = false;
 			resultInfo = error.getMessage();
@@ -109,12 +132,14 @@ public class GcmClientRequest {
 		gcmTrack.setGcmDestinationIds(message.getRegistration_ids());
 		gcmTrack.setBundleContent(dataMsg.toString() + "\n\n" + (extraLogInfo != null ? extraLogInfo : extraLogInfo));
 		gcmTrack.setResultInfo(resultInfo.substring(0, 
-				resultInfo.length() < 495 ? resultInfo.length() : 495));
+				resultInfo.length() < 495 
+				? resultInfo.length() : 495));
 		gcmTrack.setSuccess(success);	
-		//gcmTracks.save(gcmTrack);
+		gcmTracks.save(gcmTrack);
 		
-		//--------------------------------------------------------------------------------//		
-		return gcmTrack;
+		
+		return gcmResponse;
+		//--------------------------------------------------------------------------------//	
 	}
 
 }

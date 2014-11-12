@@ -106,13 +106,18 @@ public class Patient {
 
 	
 	public void addGcmRegistrationId(String gcmRegistrationId) {
+		gcmRegistrationId = gcmRegistrationId.replace("\"","");
 		if(!this.gcmRegistrationIds.contains(gcmRegistrationId))
 			this.gcmRegistrationIds.add(gcmRegistrationId);
 	}
 	
 
 	public Set<String> getGcmRegistrationIds() {
-		return gcmRegistrationIds;
+		Set<String> idsLocal = new HashSet<String>();
+		for(String gcmId : gcmRegistrationIds){			
+			idsLocal.add(gcmId.replace("\"",""));
+		}
+		return idsLocal;
 	}
 
 	public void setGcmRegistrationIds(List<String> gcmRegistrationIds) {

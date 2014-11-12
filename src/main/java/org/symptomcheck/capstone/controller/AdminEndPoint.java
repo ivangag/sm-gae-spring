@@ -206,6 +206,7 @@ public class AdminEndPoint {
 	    Patient p = patients.findOne(patient.getMedicalRecordNumber());	   
 	    if(p != null){
 	    	p.setFirstName(patient.getFirstName());
+	    	p.setLastName(patient.getLastName());
 	    	//patients.save(p);
 	    	PMF.get().getPersistenceManager().close();
 	    }

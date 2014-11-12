@@ -78,7 +78,8 @@ public class PopulateDataBaseTest {
 	.setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
 	.setErrorHandler(error)
 	//.setClient(new ApacheClient())
-	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.FULL).build()
+	.setEndpoint(TEST_URL_LOCAL_TRUSTED)
+	.setLogLevel(LogLevel.FULL).build()
 	.create(SymptomManagerSvcApi.class);	
 	
 	private SymptomManagerSvcApi symptomSvcAsPatient2 = new SecuredRestBuilder()
@@ -89,7 +90,8 @@ public class PopulateDataBaseTest {
 	.setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
 	.setErrorHandler(error)
 	//.setClient(new ApacheClient())
-	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.FULL).build()
+	.setEndpoint(TEST_URL_LOCAL_TRUSTED)
+	.setLogLevel(LogLevel.FULL).build()
 	.create(SymptomManagerSvcApi.class);		
 
 	private SymptomManagerSvcApi symptomSvcAsPatient1Trusted = new SecuredRestBuilder()
@@ -125,11 +127,11 @@ public class PopulateDataBaseTest {
 	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.FULL).build()
 	.create(SymptomManagerSvcApi.class);		
 	
-	Patient patient1User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_1, "patient_1_FirstName", "patient_1_LastName");
-	Patient patient2User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_2, "patient_2_FirstName", "patient_2_LastName");
-	Patient patient3User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_3, "patient_3_FirstName", "patient_3_LastName");
-	Patient patient4User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_4, "patient_34_FirstName", "patient_4_LastName");
-	Doctor doctor1User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_1, "doctor_1_Name", "doctor_2_LastName");
+	Patient patient1User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_1, "Mario", "Milone");
+	Patient patient2User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_2, "Alfredo", "Acquasanta");
+	Patient patient3User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_3, "Gianni", "Pasquale");
+	Patient patient4User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_4, "Armando", "LaRocca");
+	Doctor doctor1User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_1, "Gianni", "Belmondo");
 	Doctor doctor2User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_2, "Armando", "Della Torre");
 	
 /*	
@@ -301,15 +303,34 @@ public class PopulateDataBaseTest {
 		List<PainMedication> painMeds  = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient1User.getMedicalRecordNumber());
 	}
 	
-	@Test
-	public void addCheckIns(){
-		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
-		/*
+	//@Test 
+	public void clearGcmIds(){
+		
 		Doctor doctor = symptomSvcASDoctor1.findDoctorByUniqueDoctorID(doctor1User.getUniqueDoctorId());
 		for(String gcmId : doctor.getGcmRegistrationIds()){
 			//String gcmId2 = gcmId.replace("\"", "");
 			symptomSvcASDoctor1.clearGCMRegistration(gcmId.replace("\"", ""));
-		}*/
+		}
+		
+		Patient patient = symptomSvcAsPatient1.findPatientByMedicalRecordNumber(patient1User.getMedicalRecordNumber());
+		for(String gcmId : patient.getGcmRegistrationIds()){
+			//String gcmId2 = gcmId.replace("\"", "");
+			symptomSvcAsPatient1.clearGCMRegistration(gcmId.replace("\"", ""));
+		}
+
+		patient = symptomSvcAsPatient1.findPatientByMedicalRecordNumber(patient2User.getMedicalRecordNumber());
+		for(String gcmId : patient.getGcmRegistrationIds()){
+			//String gcmId2 = gcmId.replace("\"", "");
+			symptomSvcAsPatient1.clearGCMRegistration("\"" + gcmId + "\"");
+		}	
+
+	}
+	
+	//@Test
+	public void addCheckIns(){
+		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
+		addPatientToDoctor();
+		sendGCMRegId();
 		Map<String,String> meds = new HashMap<String,String>();
 		
 		
@@ -387,28 +408,37 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	//@Test
+	@Test
 	public void addPatientToDoctor(){
 		Doctor doctor2 = symptomSvcASDoctor1.addDoctor(doctor2User);
 		Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);
-		patient1User.setFirstName("Mario");
-		patient1User.setLastName("Milone");
 		symptomSvcAsPatient1.addPatient(patient1User);
-		patient2User.setFirstName("Alfredo");
-		patient2User.setLastName("Acquasanta");
 		symptomSvcAsPatient1.addPatient(patient2User);
+		symptomSvcAsPatient1.addPatient(patient3User);
+		symptomSvcAsPatient1.addPatient(patient4User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient1User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient2User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient1User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient2User);
-		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient2User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient3User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient4User);
 	}
 	
 	//@Test
 	public void sendGCMRegId(){
-
-		String gcmRegistrationId = "Doctor1GCMId_" + UUID.randomUUID();
+		Doctor doctor = symptomSvcASDoctor1.findDoctorByUniqueDoctorID(doctor1User.getUniqueDoctorId());
+		for(String gcmId : doctor.getGcmRegistrationIds()){
+			//String gcmId2 = gcmId.replace("\"", "");
+			symptomSvcASDoctor1.clearGCMRegistration(gcmId.replace("\"", ""));
+		}
+		String gcmRegistrationId = "APA91bGtpAXOQvEZovvMrNpisapA-IOD-BNWCYuwzv8S1ffVt9sdbu2fVMO8uHKaCfjFvpA68MYIy6d7MqifQD-ooler7z3_gwP_PELo_ctMSP-jBfzTpq0GMe_AoQNFlFeD2F7sZfVVprmQEGH863EYgbdHWlolghH1YWkXwrkEIPjeWfVd8F4";		
 		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
-		
+		gcmRegistrationId = "APA91bHdWFJBx6opyDqNzOue6vURxdaYG2uNy_t2LW-d1U_wvtx3LQ37U3xbDCYYbYloXgIYiswRUl-lJrv-uEQdnnrZAeC2t16XX-ak8PxGv4J4bdS6TffUc7Xo0gUvD2IDaX6GaV3MQTOJ9GG1q3lXbkg7USZj6yXdlxaJxII48MjQgA3sbtc";
+		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
+		gcmRegistrationId = "APA91bEOuoSTJHFH5jIJ7Aw3R0j8O96OS45qQuwTLLpYpygRZ3MrUAvt1OGVcGzjlncw6VWwNUnB2tOiR9gwpUGvIgKlKr33sf4KmPbroQg1h-qeCHq20oDjfYajFMyr-ECKHRS7P0W4VfDmHLHvZg4MMiqWAWIHa9FgBGCIHksTB43yvgT7tpw";
+		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
+		gcmRegistrationId = "APA91bEUTv368AOqxTyNyk1LDGdicLJn8YfPb8AUsYStubCisrRvVqIIh2RtJGAnigEHC3qJjXoIEEvNG0JiqeJWE425Ia_Di0wcnRq3uckAS56jkvz_gUKwa7bf425gEPzfNsHP5EXeXbcdGn2ulZ-i5JMH2VzcLpdcJxLl2rxIi268pWgX14E";
+		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
 	}
 	
 	//@Test

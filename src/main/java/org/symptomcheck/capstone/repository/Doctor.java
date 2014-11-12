@@ -4,11 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable
+@PersistenceCapable//(identityType = IdentityType.APPLICATION, detachable = "true")
 public class Doctor{
 	
 	@PrimaryKey
@@ -79,11 +80,17 @@ public class Doctor{
 	}
 	
 	public void addGcmRegistrationId(String gcmRegistrationId) {
+		gcmRegistrationId = gcmRegistrationId.replace("\"","");
 		if(!this.gcmRegistrationIds.contains(gcmRegistrationId))
 			this.gcmRegistrationIds.add(gcmRegistrationId);
 	}
 	public Set<String> getGcmRegistrationIds() {
-		return gcmRegistrationIds;
+
+		Set<String> idsLocal = new HashSet<String>();
+		for(String gcmId : gcmRegistrationIds){			
+			idsLocal.add(gcmId.replace("\"",""));
+		}
+		return idsLocal;
 	}
 	public void setGcmRegistrationIds(List<String> gcmRegistrationIds) {
 		this.gcmRegistrationIds = new HashSet<String>(gcmRegistrationIds);;		

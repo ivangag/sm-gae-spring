@@ -39,6 +39,14 @@ public class DoctorRepository extends JDOCrudRepository<Doctor, String>{
 		query.declareParameters("String n");
 		return (List<Doctor>)query.execute(medicalNumber);	
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Collection<Doctor> findByGcmRegistrationId(String regId){
+		Query query = PMF.get().getPersistenceManager().newQuery(Doctor.class);
+		query.setFilter("gcmRegistrationIds.contains(n)");
+		query.declareParameters("String n");
+		return (List<Doctor>)query.execute(regId);	
+	}	
 	/*
 	public Collection<Doctor> findByPatient(Patient patient) {
 		// TODO Auto-generated method stub

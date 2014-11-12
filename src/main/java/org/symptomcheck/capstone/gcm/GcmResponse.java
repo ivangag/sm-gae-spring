@@ -13,7 +13,7 @@ public class GcmResponse {
   
     public String canonical_ids;
   
-    List<GcmReponseResult> results = new ArrayList<GcmReponseResult>();
+    public  List<GcmReponseResult> results = new ArrayList<GcmReponseResult>();
 
     @Override
     public String toString()

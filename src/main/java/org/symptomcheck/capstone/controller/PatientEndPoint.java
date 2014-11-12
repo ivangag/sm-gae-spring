@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,11 +38,14 @@ import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.DoctorRepository;
 import org.symptomcheck.capstone.repository.GcmTrack;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
+import org.symptomcheck.capstone.repository.PMF;
 import org.symptomcheck.capstone.repository.PainMedication;
 import org.symptomcheck.capstone.repository.PainMedicationRepository;
 import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
+
+import com.google.api.client.util.Lists;
 
 @Controller
 public class PatientEndPoint {
@@ -57,6 +63,9 @@ public class PatientEndPoint {
 	DoctorRepository doctors;	
 	@Autowired
 	GcmTrackRepository gcmTracks;
+	
+	@Autowired 
+	GcmClientRequest gcmClientRequest;
 	
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
@@ -81,19 +90,47 @@ public class PatientEndPoint {
 		//here we should retrieve the doctors of patient and related gcm_reg_id(s)
 		List<Doctor> doctorList = (List<Doctor>) doctors.findByPatientMedicalNumber(username);
 		List<String> doctors_reg_ids = new ArrayList<String>();
+		//Map<String,String> doctors_reg_ids = new HashMap<String, String>();
 		List<String> doctorsInfo = new ArrayList<String>();
 		if(!doctorList.isEmpty()){
 			for(Doctor doctor : doctorList){
 				for(String regId : doctor.getGcmRegistrationIds()){
-					doctors_reg_ids.add(regId.replace("\"", ""));	
+					//doctors_reg_ids.add(regId.replace("\"", ""));
+					doctors_reg_ids.add(regId);
+					//doctors_reg_ids.put(doctor.getUniqueDoctorId(), regId.replace("\"", ""));
 				}
 				doctorsInfo.add(doctor.toString());
 			}
 		}
 		if(!doctors_reg_ids.isEmpty()){
-			gcmTracks.save(
-					GcmClientRequest.get().PostGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, username, UserType.PATIENT, doctors_reg_ids, doctorsInfo)
-					);
+			GcmResponse gcmResponse = gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, username, UserType.PATIENT,
+					doctors_reg_ids, doctorsInfo);
+			
+			if(gcmResponse != null) {
+				// try to extract canonical
+				if(Integer.valueOf(gcmResponse.canonical_ids) != null){
+					int canonical_ids = Integer.valueOf(gcmResponse.canonical_ids);
+					System.out.print(String.format("doctors_reg_ids: %s\n",doctors_reg_ids.toString()));
+					System.out.print(String.format("canonical_ids COUNT: %d\n",canonical_ids));
+					if(canonical_ids > 0) {						
+						for(int idx = 0; idx < gcmResponse.results.size(); idx++){
+							final String canonicalId = gcmResponse.results.get(idx).getRegistration_id();
+							if(!canonicalId.isEmpty()){
+								String gcmIdtoUpdate = doctors_reg_ids.get(idx);
+								Collection<Doctor> doctorList1 = doctors.findByGcmRegistrationId(gcmIdtoUpdate);
+								System.out.print(String.format("doctors.findByGcmRegistrationId: %d-canonical:%s\n",doctorList1.size(),gcmResponse.results.get(idx).getRegistration_id()));
+								for(Doctor doctor : doctorList1){
+									List<String> gcmDoctorIds = Lists.newArrayList(doctor.getGcmRegistrationIds());
+									gcmDoctorIds.remove(gcmIdtoUpdate);
+									gcmDoctorIds.add(gcmResponse.results.get(idx).getRegistration_id());
+									doctor.setGcmRegistrationIds(gcmDoctorIds);
+									PMF.get().getPersistenceManager().close();
+								}
+							}												
+						}						
+					}						
+				}
+			}						
 		}
 		return check;
 	}
