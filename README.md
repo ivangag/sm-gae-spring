@@ -54,7 +54,7 @@ N.B. this url is accessible because excluded by OAuth2 control
 
 ## What to Pay Attention to
 
-In this version of the VideoSvc application, we have built on top of Google AppEngine,
+In this version of the application, we have built on top of Google AppEngine,
 JDO, and Maven.
 
 1. The Repositories are being manually implemented on top of JDOCrudRepository rather
@@ -62,3 +62,5 @@ JDO, and Maven.
 2. Maven provides automation to deploy the application to the cloud
 3. The src/main/webapp/WEB-INF/web.xml file is being used to launch Spring and ensure that
    the Application class is used to configure the server. 
+4. The src/main/webapp/WEB-INF/appengine-web.xml has to include the <sessions-enabled>true</sessions-enabled> 
+   in order to enable the session, otherwise the OAuth over Spring won't work.
