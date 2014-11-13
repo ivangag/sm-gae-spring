@@ -326,11 +326,11 @@ public class PopulateDataBaseTest {
 
 	}
 	
-	//@Test
+	@Test
 	public void addCheckIns(){
 		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
-		addPatientToDoctor();
-		sendGCMRegId();
+		//addPatientToDoctor();
+		//sendGCMRegId();
 		Map<String,String> meds = new HashMap<String,String>();
 		
 		
@@ -340,7 +340,7 @@ public class PopulateDataBaseTest {
 		
 		Calendar calendar = Calendar.getInstance();
 		Long timestamp = Calendar.getInstance().getTimeInMillis();
-		CheckIn checkIn = SymptomTestData.createDummyCheckIn(timestamp, PainLevel.MODERATE, FeedStatus.SOME, meds);
+		CheckIn checkIn = SymptomTestData.createDummyCheckIn(timestamp, PainLevel.WELL_CONTROLLED, FeedStatus.NO, meds);
 		//add check-in 
 		CheckIn checkInRes =symptomSvcAsPatient1.addCheckIn(patient1User.getMedicalRecordNumber(),checkIn);	
 		List<CheckIn> checkInsPatient1 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient1User.getMedicalRecordNumber());
@@ -408,7 +408,7 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	@Test
+	//@Test
 	public void addPatientToDoctor(){
 		Doctor doctor2 = symptomSvcASDoctor1.addDoctor(doctor2User);
 		Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);

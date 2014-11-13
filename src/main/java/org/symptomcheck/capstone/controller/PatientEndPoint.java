@@ -115,7 +115,8 @@ public class PatientEndPoint {
 					if(canonical_ids > 0) {						
 						for(int idx = 0; idx < gcmResponse.results.size(); idx++){
 							final String canonicalId = gcmResponse.results.get(idx).getRegistration_id();
-							if(!canonicalId.isEmpty()){
+							if((canonicalId != null) && 
+									!canonicalId.isEmpty()){
 								String gcmIdtoUpdate = doctors_reg_ids.get(idx);
 								Collection<Doctor> doctorList1 = doctors.findByGcmRegistrationId(gcmIdtoUpdate);
 								System.out.print(String.format("doctors.findByGcmRegistrationId: %d-canonical:%s\n",doctorList1.size(),gcmResponse.results.get(idx).getRegistration_id()));
