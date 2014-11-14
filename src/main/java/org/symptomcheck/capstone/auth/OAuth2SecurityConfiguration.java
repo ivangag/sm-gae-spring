@@ -25,10 +25,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
+
+import com.github.biegleux.gae.oauth.tokenstore.GaeTokenStore;
 
 /**
  *	Configure this web application to use OAuth 2.0.
@@ -177,6 +181,15 @@ public class OAuth2SecurityConfiguration {
 		// A data structure used to store both a ClientDetailsService and a UserDetailsService
 		private ClientAndUserDetailsService combinedService_;
 
+		@Autowired
+	    private TokenStore tokenStore;
+		
+
+	   @Bean
+	    public TokenStore tokenStore() {
+	        return new GaeTokenStore();
+	    }
+		   
 		/**
 		 * 
 		 * This constructor is used to setup the clients and users that will be able to login to the
@@ -259,7 +272,7 @@ public class OAuth2SecurityConfiguration {
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
 				throws Exception {
-			endpoints.authenticationManager(authenticationManagerBean);
+			endpoints.tokenStore(tokenStore).authenticationManager(authenticationManagerBean);
 		}
 
 		/**

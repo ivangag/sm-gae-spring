@@ -47,9 +47,9 @@ public class PopulateDataBaseTest {
 		}
 	}
 
-	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
+	private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
 	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080/symptom-management-capstone-0.0.4";
-	private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
+	//private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	private final String TEST_URL_REMOTE_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	
 	private final String USERNAME = "admin";
