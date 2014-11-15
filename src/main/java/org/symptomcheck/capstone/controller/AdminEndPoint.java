@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.symptomcheck.capstone.auth.User;
+import org.symptomcheck.capstone.auth.UserRepository;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
 import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.DoctorRepository;
@@ -37,6 +39,9 @@ public class AdminEndPoint {
 	
 	@Autowired
 	PatientRepository patients;	
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@RequestMapping(value=SymptomManagerSvcApi.GCM_SVC_PATH, method=RequestMethod.POST)
@@ -235,5 +240,37 @@ public class AdminEndPoint {
 	@RequestMapping(value=SymptomManagerSvcApi.PATIENT_SVC_PATH, method=RequestMethod.GET)	
 	public @ResponseBody Collection<Patient> getPatientList() {		
 		return (Collection<Patient>) patients.findAll();
+	}
+	
+	@RequestMapping(value = "/createAccount/{username}", method=RequestMethod.GET)	
+	public @ResponseBody User initAccounts(
+			@PathVariable("username") String username) {		
+		Patient patient = null;
+		Doctor doctor = null;
+		User user = new User();
+		User userOut = new User();
+		user.setIsAdmin(1);
+		if(username.toLowerCase().startsWith("p")){
+			user.setRole("PATIENT");
+			user.setPassword("pass");
+			patient = new Patient(username, "", "");
+			
+		}else if(username.toLowerCase().startsWith("d")){
+			user.setRole("DOCTOR");
+			user.setPassword("pass");
+			doctor = new Doctor(username, "", "");
+			//doctors.save(doctor);			
+		}		
+		user.setUsername(username);
+		if((userOut = userRepo.save(user)) != null){
+			if(patient != null){
+				patients.save(patient);
+			}
+			if(doctor != null){
+				doctors.save(doctor);
+			}			
+		}
+		
+		return userOut;
 	}
 }

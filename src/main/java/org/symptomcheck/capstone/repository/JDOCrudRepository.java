@@ -31,6 +31,8 @@ public class JDOCrudRepository<T,ID extends Serializable> {
 
 	private Class<T> type_;
 	
+	public JDOCrudRepository(){}
+	
 	public JDOCrudRepository(Class<T> type){
 		type_ = type;
 	}

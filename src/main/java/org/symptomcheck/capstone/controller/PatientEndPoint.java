@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.symptomcheck.capstone.auth.User;
+import org.symptomcheck.capstone.auth.UserRepository;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
 import org.symptomcheck.capstone.gcm.GcmClientRequest;
 import org.symptomcheck.capstone.gcm.GcmConstants;
@@ -67,6 +69,8 @@ public class PatientEndPoint {
 	@Autowired 
 	GcmClientRequest gcmClientRequest;
 	
+
+	
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
 	public @ResponseBody PainMedication addPainMedication(
@@ -83,6 +87,8 @@ public class PatientEndPoint {
 	@Secured("ROLE_PATIENT")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins", method=RequestMethod.POST)		
 	public @ResponseBody CheckIn addCheckIn(Principal User, @RequestBody CheckIn checkIn){
+
+		
 		final String username = User.getName();
 		checkIn.setPatientMedicalNumber(username); 
 		CheckIn check = checkIns.save(checkIn);

@@ -70,6 +70,7 @@ public class OAuth2SecurityConfiguration {
 	    public void configure(WebSecurity webSecurity) throws Exception
 	    {
 	        webSecurity.ignoring().antMatchers("/_ah/**");
+	        webSecurity.ignoring().antMatchers("/createAccount/**");
 	    }
 
 		/*
@@ -84,17 +85,20 @@ public class OAuth2SecurityConfiguration {
 		@Autowired
 		private UserDetailsService userDetailsService;
 
+		@Autowired 
+		private CustomUserDetailsService userStoredDetailsService;
+		
 		@Autowired
 		protected void registerAuthentication(
 				final AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(userDetailsService);
+			auth.userDetailsService(userStoredDetailsService);
 		}
 		 		
 	    
 		 @Autowired
 		    public void configureGlobal(AuthenticationManagerBuilder auth)
 		            throws Exception {
-		        auth.userDetailsService(userDetailsService);
+		        auth.userDetailsService(userStoredDetailsService);
 		    }
 
 		@Bean
@@ -123,7 +127,8 @@ public class OAuth2SecurityConfiguration {
 			http
 			.authorizeRequests()
 				.antMatchers("/oauth/token").anonymous()
-				.antMatchers("/init").permitAll();
+				.antMatchers("/init").permitAll()
+				.antMatchers("/createAccount/**").permitAll();
 			
 			
 			// If you were going to reuse this class in another
@@ -181,6 +186,9 @@ public class OAuth2SecurityConfiguration {
 		// A data structure used to store both a ClientDetailsService and a UserDetailsService
 		private ClientAndUserDetailsService combinedService_;
 
+		@Autowired 
+		private CustomUserDetailsService userStoredDetailsService;
+		
 		@Autowired
 	    private TokenStore tokenStore;
 		
@@ -231,22 +239,23 @@ public class OAuth2SecurityConfiguration {
 			// Create a series of hard-coded users. 
 			UserDetailsService svc = new InMemoryUserDetailsManager(
 					Arrays.asList(
-							User.create("admin", "pass", "ADMIN", "USER"),
-							User.create(SymptomManagerSvcApi.PATIENT_ID_1, "pass", 
+							UserInMemory.create("admin", "pass", "ADMIN", "USER"),
+							UserInMemory.create(SymptomManagerSvcApi.PATIENT_ID_1, "pass", 
 									"ROLE_PATIENT"),
-							User.create(SymptomManagerSvcApi.PATIENT_ID_2, "pass", "ROLE_PATIENT"),
-							User.create(SymptomManagerSvcApi.PATIENT_ID_3, "pass", "ROLE_PATIENT"),
-							User.create(SymptomManagerSvcApi.DOCTOR_ID_1, "pass", "ROLE_DOCTOR"),
-							User.create(SymptomManagerSvcApi.DOCTOR_ID_2, "pass", "ROLE_DOCTOR"),
-							User.create("user2", "pass", "USER"),
-							User.create("user5", "pass", "USER")));
+							UserInMemory.create(SymptomManagerSvcApi.PATIENT_ID_2, "pass", "ROLE_PATIENT"),
+							UserInMemory.create(SymptomManagerSvcApi.PATIENT_ID_3, "pass", "ROLE_PATIENT"),
+							UserInMemory.create(SymptomManagerSvcApi.DOCTOR_ID_1, "pass", "ROLE_DOCTOR"),
+							UserInMemory.create(SymptomManagerSvcApi.DOCTOR_ID_2, "pass", "ROLE_DOCTOR"),
+							UserInMemory.create("user2", "pass", "USER"),
+							UserInMemory.create("user5", "pass", "USER")));
 
+			
 			// Since clients have to use BASIC authentication with the client's id/secret,
 			// when sending a request for a password grant, we make each client a user
 			// as well. When the BASIC authentication information is pulled from the
 			// request, this combined UserDetailsService will authenticate that the
 			// client is a valid "user". 
-			combinedService_ = new ClientAndUserDetailsService(csvc, svc);
+			combinedService_ = new ClientAndUserDetailsService(csvc, userStoredDetailsService);
 		}
 
 		/**

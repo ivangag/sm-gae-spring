@@ -7,8 +7,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 
 /**

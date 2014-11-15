@@ -47,9 +47,9 @@ public class PopulateDataBaseTest {
 		}
 	}
 
-	private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
+	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
 	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080/symptom-management-capstone-0.0.4";
-	//private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
+	private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	private final String TEST_URL_REMOTE_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	
 	private final String USERNAME = "admin";
@@ -79,7 +79,7 @@ public class PopulateDataBaseTest {
 	.setErrorHandler(error)
 	//.setClient(new ApacheClient())
 	.setEndpoint(TEST_URL_LOCAL_TRUSTED)
-	.setLogLevel(LogLevel.FULL).build()
+	.setLogLevel(LogLevel.NONE).build()
 	.create(SymptomManagerSvcApi.class);	
 	
 	private SymptomManagerSvcApi symptomSvcAsPatient2 = new SecuredRestBuilder()
@@ -326,7 +326,7 @@ public class PopulateDataBaseTest {
 
 	}
 	
-	@Test
+	//@Test
 	public void addCheckIns(){
 		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
 		//addPatientToDoctor();
@@ -408,14 +408,14 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	//@Test
+	@Test
 	public void addPatientToDoctor(){
-		Doctor doctor2 = symptomSvcASDoctor1.addDoctor(doctor2User);
-		Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);
-		symptomSvcAsPatient1.addPatient(patient1User);
-		symptomSvcAsPatient1.addPatient(patient2User);
-		symptomSvcAsPatient1.addPatient(patient3User);
-		symptomSvcAsPatient1.addPatient(patient4User);
+		Doctor doctor2;// = symptomSvcASDoctor1.addDoctor(doctor2User);
+		//Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);
+		//symptomSvcAsPatient1.addPatient(patient1User);
+		//symptomSvcAsPatient1.addPatient(patient2User);
+		//symptomSvcAsPatient1.addPatient(patient3User);
+		//symptomSvcAsPatient1.addPatient(patient4User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient1User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient2User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient1User);
@@ -487,5 +487,10 @@ public class PopulateDataBaseTest {
 			}			
 		}			 
 		 
+	}
+	
+	//@Test
+	public void login(){
+		UserInfo user = symptomSvcAsPatient1.verifyUser();		
 	}
 }

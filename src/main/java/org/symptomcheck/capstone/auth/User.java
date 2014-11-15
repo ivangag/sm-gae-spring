@@ -1,79 +1,64 @@
-/* 
- **
- ** Copyright 2014, Jules White
- **
- ** 
- */
 package org.symptomcheck.capstone.auth;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.io.Serializable;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
-public class User implements UserDetails {
 
-	public static UserDetails create(String username, String password,
-			String...authorities) {
-		return new User(username, password, authorities);
-	}
+@PersistenceCapable
+public class User implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5247905988101523432L;
+
+	@PrimaryKey
+	@Persistent
+	private String username;
 	
-	private final Collection<GrantedAuthority> authorities_;
-	private final String password_;
-	private final String username_;
+	@Persistent
+	private String password;
+	
+	@Persistent
+	private String role;
+	
+	@Persistent
+	private int isAdmin;
 
-	@SuppressWarnings("unchecked")
-	private User(String username, String password) {
-		this(username, password, Collections.EMPTY_LIST);
+	public String getUsername() {
+		return username;
 	}
 
-	private User(String username, String password,
-			String...authorities) {
-		username_ = username;
-		password_ = password;
-		authorities_ = AuthorityUtils.createAuthorityList(authorities);
-	}
-
-	private User(String username, String password,
-			Collection<GrantedAuthority> authorities) {
-		super();
-		username_ = username;
-		password_ = password;
-		authorities_ = authorities;
-	}
-
-	public Collection<GrantedAuthority> getAuthorities() {
-		return authorities_;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
-		return password_;
+		return password;
 	}
 
-	public String getUsername() {
-		return username_;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
+	public String getRole() {
+		return role;
 	}
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
+	public int getIsAdmin() {
+		return isAdmin;
 	}
 
-	@Override
-	public boolean isEnabled() {
-		return true;
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
 	}
-
+	
+	public User(){}
 }
