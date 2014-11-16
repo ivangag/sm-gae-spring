@@ -23,6 +23,13 @@ import org.symptomcheck.capstone.repository.QuestionType;
 import org.symptomcheck.capstone.repository.UserInfo;
 import org.symptomcheck.capstone.symptom.SymptomTestData;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
@@ -46,10 +53,21 @@ public class PopulateDataBaseTest {
 			return error;
 		}
 	}
+	/*
+	   // Using Android's base64 libraries. This can be replaced with any base64 library.
+    private static class ByteArrayToBase64TypeAdapter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+        public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return Base64.decode(json.getAsString(), Base64.NO_WRAP);
+        }
 
-	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
+        public JsonElement serialize(byte[] src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(Base64.encodeToString(src, Base64.NO_WRAP));
+        }
+    }
+    */
+	private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
 	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080/symptom-management-capstone-0.0.4";
-	private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
+	//private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	private final String TEST_URL_REMOTE_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	
 	private final String USERNAME = "admin";
@@ -79,7 +97,7 @@ public class PopulateDataBaseTest {
 	.setErrorHandler(error)
 	//.setClient(new ApacheClient())
 	.setEndpoint(TEST_URL_LOCAL_TRUSTED)
-	.setLogLevel(LogLevel.NONE).build()
+	.setLogLevel(LogLevel.FULL).build()
 	.create(SymptomManagerSvcApi.class);	
 	
 	private SymptomManagerSvcApi symptomSvcAsPatient2 = new SecuredRestBuilder()
@@ -326,7 +344,7 @@ public class PopulateDataBaseTest {
 
 	}
 	
-	//@Test
+	@Test
 	public void addCheckIns(){
 		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
 		//addPatientToDoctor();
@@ -408,7 +426,7 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	@Test
+	//@Test
 	public void addPatientToDoctor(){
 		Doctor doctor2;// = symptomSvcASDoctor1.addDoctor(doctor2User);
 		//Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);

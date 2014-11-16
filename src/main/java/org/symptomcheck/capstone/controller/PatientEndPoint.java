@@ -48,6 +48,7 @@ import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
 
 import com.google.api.client.util.Lists;
+import com.google.appengine.api.datastore.Blob;
 
 @Controller
 public class PatientEndPoint {
@@ -91,6 +92,7 @@ public class PatientEndPoint {
 		
 		final String username = User.getName();
 		checkIn.setPatientMedicalNumber(username); 
+		checkIn.image = new Blob(checkIn.getThroatImage());
 		CheckIn check = checkIns.save(checkIn);
 		
 		//here we should retrieve the doctors of patient and related gcm_reg_id(s)
@@ -146,7 +148,14 @@ public class PatientEndPoint {
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins/search", method=RequestMethod.GET)		
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatient(
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber){		
-		return checkIns.findByPatientMedicalNumber(medicalRecordNumber);
+		List<CheckIn> checks = (List<CheckIn>) checkIns.findByPatientMedicalNumber(medicalRecordNumber);
+		List<CheckIn> checkInsRes = Lists.newArrayList();
+		for(CheckIn checkIn : checks){
+			CheckIn chk = checkIn;
+			chk.setThroatImage(checkIn.image.getBytes());
+			checkInsRes.add(chk);
+		}
+		return checkInsRes;
 	}
 	
 

@@ -1,5 +1,18 @@
 package org.symptomcheck.capstone.symptom;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchEvent.Modifier;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,6 +72,16 @@ public class SymptomTestData {
 						QuestionType.Medication, timestamp.toString());
 				checkIn.addQuestions(question);			
 				//checkIn.setQuestion(question);
+			}
+			Path path = Paths.get("D:/Eclipse_EE_Projects/CapstoneGAE/sm-gae-spring/src/test/throat.png");
+			try {
+				byte[] image = Files.readAllBytes(path);
+				if(image.length < 1024*50){
+					checkIn.setThroatImage(image);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		
 			

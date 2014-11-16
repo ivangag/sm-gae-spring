@@ -5,15 +5,17 @@ import java.util.List;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-@JsonIgnoreProperties("key")
+@JsonIgnoreProperties({ "key", "image" })
 public class CheckIn {
 	
 	@PrimaryKey
@@ -33,7 +35,12 @@ public class CheckIn {
 	
 	@Persistent
     private String patientMedicalNumber;
+	
+	@Persistent
+	public Blob image;
     
+	@NotPersistent
+	private byte[] throatImage;
 
 	@Persistent(embeddedElement = "true", serialized = "true", defaultFetchGroup="true") 
 	@Element(embedded="true") 
@@ -88,6 +95,12 @@ public class CheckIn {
 
 	public void addQuestions(Question question) {
 		this.questions.add(question);
+	}
+	public byte[] getThroatImage() {
+		return this.throatImage;
+	}
+	public void setThroatImage(byte[] throatImage) {
+		this.throatImage = throatImage;
 	}
 
     
