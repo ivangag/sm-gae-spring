@@ -26,6 +26,7 @@ import org.symptomcheck.capstone.repository.QuestionType;
 import org.symptomcheck.capstone.repository.Video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 /**
  * This is a utility class to aid in the construction of
@@ -77,7 +78,7 @@ public class SymptomTestData {
 			try {
 				byte[] image = Files.readAllBytes(path);
 				if(image.length < 1024*50){
-					checkIn.setThroatImage(image);
+					checkIn.setThroatImageEncoded(Base64.encodeBase64String(image));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

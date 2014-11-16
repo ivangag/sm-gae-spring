@@ -40,7 +40,7 @@ public class CheckIn {
 	public Blob image;
     
 	@NotPersistent
-	private byte[] throatImage;
+	private String throatImageEncoded;
 
 	@Persistent(embeddedElement = "true", serialized = "true", defaultFetchGroup="true") 
 	@Element(embedded="true") 
@@ -96,11 +96,12 @@ public class CheckIn {
 	public void addQuestions(Question question) {
 		this.questions.add(question);
 	}
-	public byte[] getThroatImage() {
-		return this.throatImage;
+
+	public String getThroatImageEncoded() {
+		return throatImageEncoded;
 	}
-	public void setThroatImage(byte[] throatImage) {
-		this.throatImage = throatImage;
+	public void setThroatImageEncoded(String throatImageEncoded) {
+		this.throatImageEncoded = throatImageEncoded;
 	}
 
     

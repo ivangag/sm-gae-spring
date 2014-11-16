@@ -1,5 +1,11 @@
 package org.symptomcheck.capstone.integration.test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +29,7 @@ import org.symptomcheck.capstone.repository.QuestionType;
 import org.symptomcheck.capstone.repository.UserInfo;
 import org.symptomcheck.capstone.symptom.SymptomTestData;
 
+import com.google.api.client.util.Base64;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -360,8 +367,20 @@ public class PopulateDataBaseTest {
 		Long timestamp = Calendar.getInstance().getTimeInMillis();
 		CheckIn checkIn = SymptomTestData.createDummyCheckIn(timestamp, PainLevel.WELL_CONTROLLED, FeedStatus.NO, meds);
 		//add check-in 
-		CheckIn checkInRes =symptomSvcAsPatient1.addCheckIn(patient1User.getMedicalRecordNumber(),checkIn);	
+		//CheckIn checkInRes =symptomSvcAsPatient1.addCheckIn(patient1User.getMedicalRecordNumber(),checkIn);	
+		@SuppressWarnings("unused")
 		List<CheckIn> checkInsPatient1 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient1User.getMedicalRecordNumber());
+		for(CheckIn checkIn2 : checkInsPatient1){
+			try {
+			Path path =	Files.write(
+					Paths.get("D:/img" + checkIn2.getPatientMedicalNumber() + ".png"), 
+			Base64.decodeBase64(checkIn2.getThroatImageEncoded()), 
+						StandardOpenOption.CREATE);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		List<CheckIn> checkInsPatient2 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient2User.getMedicalRecordNumber());
 		meds.clear();
 		meds.put("LOXAN","NO");

@@ -47,6 +47,7 @@ import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
 
+import com.google.api.client.util.Base64;
 import com.google.api.client.util.Lists;
 import com.google.appengine.api.datastore.Blob;
 
@@ -92,7 +93,7 @@ public class PatientEndPoint {
 		
 		final String username = User.getName();
 		checkIn.setPatientMedicalNumber(username); 
-		checkIn.image = new Blob(checkIn.getThroatImage());
+		checkIn.image = new Blob(Base64.decodeBase64(checkIn.getThroatImageEncoded()));
 		CheckIn check = checkIns.save(checkIn);
 		
 		//here we should retrieve the doctors of patient and related gcm_reg_id(s)
@@ -152,7 +153,7 @@ public class PatientEndPoint {
 		List<CheckIn> checkInsRes = Lists.newArrayList();
 		for(CheckIn checkIn : checks){
 			CheckIn chk = checkIn;
-			chk.setThroatImage(checkIn.image.getBytes());
+			chk.setThroatImageEncoded(Base64.encodeBase64String(chk.image.getBytes()));
 			checkInsRes.add(chk);
 		}
 		return checkInsRes;
