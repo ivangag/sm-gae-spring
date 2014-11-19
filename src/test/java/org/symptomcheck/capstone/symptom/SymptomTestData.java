@@ -74,7 +74,10 @@ public class SymptomTestData {
 				checkIn.addQuestions(question);			
 				//checkIn.setQuestion(question);
 			}
-			Path path = Paths.get("D:/Eclipse_EE_Projects/CapstoneGAE/sm-gae-spring/src/test/throat.png");
+			final String imageUrl = "https://drive.google.com/open?id=0B0VPaQ9HUIlNUmRETjZ4ZFJ6XzQ&authuser=0";
+			checkIn.setImageUrl(imageUrl);
+			/*
+			Path path = Paths.get("D:/Eclipse_EE_Projects/CapstoneGAE/throat.png");
 			try {
 				byte[] image = Files.readAllBytes(path);
 				if(image.length < 1024*50){
@@ -83,7 +86,7 @@ public class SymptomTestData {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		
 			
 		/*Question question1 = new Question("Did you Take Lortan?","YES",QuestionType.Medication,timestamp.toString());

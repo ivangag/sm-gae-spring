@@ -317,9 +317,11 @@ public class PopulateDataBaseTest {
 		//doctor = symptomSvcASDoctor2.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient3);
 		
 	}
-	//@Test
+	@Test
 	public void addPainMedications(){
-		PainMedication painMed = symptomSvcASDoctor1.addPainMedication(patient1User.getMedicalRecordNumber(), 
+		//this.addPatientToDoctor();
+		this.sendGCMRegIdToPatients();
+		PainMedication painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), 
 				new PainMedication("LORTAB"));		
 		painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), 
 				new PainMedication("OXYTUI"));				
@@ -351,7 +353,7 @@ public class PopulateDataBaseTest {
 
 	}
 	
-	@Test
+	//@Test
 	public void addCheckIns(){
 		//symptomSvcASDoctor1.clearGCMRegistration("ALL");
 		//addPatientToDoctor();
@@ -370,7 +372,7 @@ public class PopulateDataBaseTest {
 		//CheckIn checkInRes =symptomSvcAsPatient1.addCheckIn(patient1User.getMedicalRecordNumber(),checkIn);	
 		@SuppressWarnings("unused")
 		List<CheckIn> checkInsPatient1 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient1User.getMedicalRecordNumber());
-		for(CheckIn checkIn2 : checkInsPatient1){
+		/*for(CheckIn checkIn2 : checkInsPatient1){
 			try {
 			Path path =	Files.write(
 					Paths.get("D:/img" + checkIn2.getPatientMedicalNumber() + ".png"), 
@@ -380,7 +382,7 @@ public class PopulateDataBaseTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		List<CheckIn> checkInsPatient2 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient2User.getMedicalRecordNumber());
 		meds.clear();
 		meds.put("LOXAN","NO");
@@ -462,7 +464,7 @@ public class PopulateDataBaseTest {
 	}
 	
 	//@Test
-	public void sendGCMRegId(){
+	public void sendGCMRegIdToDoctors(){
 		Doctor doctor = symptomSvcASDoctor1.findDoctorByUniqueDoctorID(doctor1User.getUniqueDoctorId());
 		for(String gcmId : doctor.getGcmRegistrationIds()){
 			//String gcmId2 = gcmId.replace("\"", "");
@@ -477,6 +479,23 @@ public class PopulateDataBaseTest {
 		gcmRegistrationId = "APA91bEUTv368AOqxTyNyk1LDGdicLJn8YfPb8AUsYStubCisrRvVqIIh2RtJGAnigEHC3qJjXoIEEvNG0JiqeJWE425Ia_Di0wcnRq3uckAS56jkvz_gUKwa7bf425gEPzfNsHP5EXeXbcdGn2ulZ-i5JMH2VzcLpdcJxLl2rxIi268pWgX14E";
 		symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
 	}
+	
+	//@Test
+	public void sendGCMRegIdToPatients(){
+		Patient patient = symptomSvcASDoctor1.findPatientByMedicalRecordNumber(patient2User.getMedicalRecordNumber());
+		/*for(String gcmId : doctor.getGcmRegistrationIds()){
+			//String gcmId2 = gcmId.replace("\"", "");
+			symptomSvcASDoctor1.clearGCMRegistration(gcmId.replace("\"", ""));
+		}*/
+		String gcmRegistrationId = "APA91bGtpAXOQvEZovvMrNpisapA-IOD-BNWCYuwzv8S1ffVt9sdbu2fVMO8uHKaCfjFvpA68MYIy6d7MqifQD-ooler7z3_gwP_PELo_ctMSP-jBfzTpq0GMe_AoQNFlFeD2F7sZfVVprmQEGH863EYgbdHWlolghH1YWkXwrkEIPjeWfVd8F4";		
+		symptomSvcAsPatient2.sendGCMRegistrationId(gcmRegistrationId);
+		//gcmRegistrationId = "APA91bHdWFJBx6opyDqNzOue6vURxdaYG2uNy_t2LW-d1U_wvtx3LQ37U3xbDCYYbYloXgIYiswRUl-lJrv-uEQdnnrZAeC2t16XX-ak8PxGv4J4bdS6TffUc7Xo0gUvD2IDaX6GaV3MQTOJ9GG1q3lXbkg7USZj6yXdlxaJxII48MjQgA3sbtc";
+		//symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
+		//gcmRegistrationId = "APA91bEOuoSTJHFH5jIJ7Aw3R0j8O96OS45qQuwTLLpYpygRZ3MrUAvt1OGVcGzjlncw6VWwNUnB2tOiR9gwpUGvIgKlKr33sf4KmPbroQg1h-qeCHq20oDjfYajFMyr-ECKHRS7P0W4VfDmHLHvZg4MMiqWAWIHa9FgBGCIHksTB43yvgT7tpw";
+		//symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
+		//gcmRegistrationId = "APA91bEUTv368AOqxTyNyk1LDGdicLJn8YfPb8AUsYStubCisrRvVqIIh2RtJGAnigEHC3qJjXoIEEvNG0JiqeJWE425Ia_Di0wcnRq3uckAS56jkvz_gUKwa7bf425gEPzfNsHP5EXeXbcdGn2ulZ-i5JMH2VzcLpdcJxLl2rxIi268pWgX14E";
+		//symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
+	}	
 	
 	//@Test
 	public void loginAndSynchronizationFlow(){

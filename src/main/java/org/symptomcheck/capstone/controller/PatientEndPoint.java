@@ -76,15 +76,37 @@ public class PatientEndPoint {
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
 	public @ResponseBody PainMedication addPainMedication(
+			Principal User,
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber, 
 			@RequestBody PainMedication painMedication){
 
+		final String username = User.getName();
+		
 		painMedication.setPatientMedicalNumber(medicalRecordNumber);
-		return medications.save(painMedication);		
+		PainMedication medicine =  medications.save(painMedication);
+		
+		List<String> patients_reg_ids = new ArrayList<String>();
+		StringBuilder patientsInfo = new StringBuilder();
+		List<Patient> patientList = (List<Patient>) patients.findByDoctorUniqueId(username);
+		//GCM handling
+		if(!patientList.isEmpty()){
+			for(Patient patient : patientList){
+				for(String regId : patient.getGcmRegistrationIds()){
+					patients_reg_ids.add(regId);
+				}
+				patientsInfo.append(patient.toString()).append(" - ");
+			}
+		}
+		if(!patients_reg_ids.isEmpty()){
+			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_RX, 
+					username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+		}		
+		
+		return medicine;
 	}
 	
 	
-	private final static String gcm_reg_id_doctor_test = "APA91bHNoS19Gz2_Z6VROtXy1-Qo5rya4cTOl8YkVI2L35RupyVhU6L2WyhPR7tKuH2eCD1hFRCBiGkJI8VnBEykJSAwIEZv-ijlI7IeO2rGDQwpCTpWe97rGdZ3FfWtjFMQHLv5cWxoXP4B9eJcQnFF2dokcMoYK9nGUoMWtRZ1LM9QCt7urZw";
+	//private final static String gcm_reg_id_doctor_test = "APA91bHNoS19Gz2_Z6VROtXy1-Qo5rya4cTOl8YkVI2L35RupyVhU6L2WyhPR7tKuH2eCD1hFRCBiGkJI8VnBEykJSAwIEZv-ijlI7IeO2rGDQwpCTpWe97rGdZ3FfWtjFMQHLv5cWxoXP4B9eJcQnFF2dokcMoYK9nGUoMWtRZ1LM9QCt7urZw";
 	
 	@Secured("ROLE_PATIENT")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins", method=RequestMethod.POST)		
@@ -92,55 +114,29 @@ public class PatientEndPoint {
 
 		
 		final String username = User.getName();
-		checkIn.setPatientMedicalNumber(username); 
-		checkIn.image = new Blob(Base64.decodeBase64(checkIn.getThroatImageEncoded()));
+		checkIn.setPatientMedicalNumber(username); 		
+		//checkIn.image = new Blob(Base64.decodeBase64(checkIn.getThroatImageEncoded()));
 		CheckIn check = checkIns.save(checkIn);
 		
 		//here we should retrieve the doctors of patient and related gcm_reg_id(s)
 		List<Doctor> doctorList = (List<Doctor>) doctors.findByPatientMedicalNumber(username);
+		
+		
 		List<String> doctors_reg_ids = new ArrayList<String>();
-		//Map<String,String> doctors_reg_ids = new HashMap<String, String>();
-		List<String> doctorsInfo = new ArrayList<String>();
+		StringBuilder doctorsInfo = new StringBuilder();
 		if(!doctorList.isEmpty()){
 			for(Doctor doctor : doctorList){
 				for(String regId : doctor.getGcmRegistrationIds()){
-					//doctors_reg_ids.add(regId.replace("\"", ""));
 					doctors_reg_ids.add(regId);
-					//doctors_reg_ids.put(doctor.getUniqueDoctorId(), regId.replace("\"", ""));
 				}
-				doctorsInfo.add(doctor.toString());
+				doctorsInfo.append(doctor.toString()).append(" - ");
 			}
 		}
+		
 		if(!doctors_reg_ids.isEmpty()){
-			GcmResponse gcmResponse = gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, username, UserType.PATIENT,
-					doctors_reg_ids, doctorsInfo);
-			
-			if(gcmResponse != null) {
-				// try to extract canonical
-				if(Integer.valueOf(gcmResponse.canonical_ids) != null){
-					int canonical_ids = Integer.valueOf(gcmResponse.canonical_ids);
-					System.out.print(String.format("doctors_reg_ids: %s\n",doctors_reg_ids.toString()));
-					System.out.print(String.format("canonical_ids COUNT: %d\n",canonical_ids));
-					if(canonical_ids > 0) {						
-						for(int idx = 0; idx < gcmResponse.results.size(); idx++){
-							final String canonicalId = gcmResponse.results.get(idx).getRegistration_id();
-							if((canonicalId != null) && 
-									!canonicalId.isEmpty()){
-								String gcmIdtoUpdate = doctors_reg_ids.get(idx);
-								Collection<Doctor> doctorList1 = doctors.findByGcmRegistrationId(gcmIdtoUpdate);
-								System.out.print(String.format("doctors.findByGcmRegistrationId: %d-canonical:%s\n",doctorList1.size(),gcmResponse.results.get(idx).getRegistration_id()));
-								for(Doctor doctor : doctorList1){
-									List<String> gcmDoctorIds = Lists.newArrayList(doctor.getGcmRegistrationIds());
-									gcmDoctorIds.remove(gcmIdtoUpdate);
-									gcmDoctorIds.add(gcmResponse.results.get(idx).getRegistration_id());
-									doctor.setGcmRegistrationIds(gcmDoctorIds);
-									PMF.get().getPersistenceManager().close();
-								}
-							}												
-						}						
-					}						
-				}
-			}						
+			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, 
+					username, UserType.PATIENT, doctors_reg_ids, doctorsInfo.toString());
+							
 		}
 		return check;
 	}
@@ -150,13 +146,15 @@ public class PatientEndPoint {
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatient(
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber){		
 		List<CheckIn> checks = (List<CheckIn>) checkIns.findByPatientMedicalNumber(medicalRecordNumber);
+		/*
 		List<CheckIn> checkInsRes = Lists.newArrayList();
 		for(CheckIn checkIn : checks){
 			CheckIn chk = checkIn;
-			chk.setThroatImageEncoded(Base64.encodeBase64String(chk.image.getBytes()));
+			//chk.setThroatImageEncoded(Base64.encodeBase64String(chk.image.getBytes()));
 			checkInsRes.add(chk);
 		}
-		return checkInsRes;
+		*/
+		return checks;
 	}
 	
 

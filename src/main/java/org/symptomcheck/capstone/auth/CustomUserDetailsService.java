@@ -21,9 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value="userRepository")
 public class CustomUserDetailsService implements UserDetailsService,Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7884479538365706760L;
 	@Autowired
 	UserRepository userRepository;
@@ -33,48 +30,40 @@ public class CustomUserDetailsService implements UserDetailsService,Serializable
 			throws UsernameNotFoundException {
 		
 		final User user = userRepository.findOne(username);
-		// TODO Auto-generated method stub
 		return new UserDetails() {
 			
 			@Override
 			public boolean isEnabled() {
-				// TODO Auto-generated method stub
 				return true;
 			}
 			
 			@Override
 			public boolean isCredentialsNonExpired() {
-				// TODO Auto-generated method stub
 				return true;
 			}
 			
 			@Override
 			public boolean isAccountNonLocked() {
-				// TODO Auto-generated method stub
 				return true;
 			}
 			
 			@Override
 			public boolean isAccountNonExpired() {
-				// TODO Auto-generated method stub
 				return true;
 			}
 			
 			@Override
 			public String getUsername() {
-				// TODO Auto-generated method stub
 				return user.getUsername().toString();
 			}
 			
 			@Override
 			public String getPassword() {
-				// TODO Auto-generated method stub
 				return user.getPassword().toLowerCase();
 			}
 			
 			@Override
 			public Collection<? extends GrantedAuthority> getAuthorities() {
-				// TODO Auto-generated method stub
 				return CustomUserDetailsService.this.getAuthorities(user.getIsAdmin(),user.getRole());
 			}
 		};

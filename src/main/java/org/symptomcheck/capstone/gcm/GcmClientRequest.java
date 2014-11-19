@@ -11,8 +11,13 @@ import java.util.concurrent.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.symptomcheck.capstone.client.SymptomGcmMessagingApi;
+import org.symptomcheck.capstone.repository.Doctor;
+import org.symptomcheck.capstone.repository.DoctorRepository;
 import org.symptomcheck.capstone.repository.GcmTrack;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
+import org.symptomcheck.capstone.repository.PMF;
+import org.symptomcheck.capstone.repository.Patient;
+import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
 
 import com.google.api.client.util.Lists;
@@ -29,7 +34,13 @@ public class GcmClientRequest {
 	@Autowired
 	GcmTrackRepository gcmTracks;
 	 
-	
+
+	@Autowired
+	PatientRepository patients;
+
+	@Autowired
+	DoctorRepository doctors;
+
 	public static class ErrorRecorder implements ErrorHandler {
 
 		private RetrofitError error;
@@ -46,6 +57,7 @@ public class GcmClientRequest {
 	}
 	
 	ExecutorService threadPool = Executors.newFixedThreadPool(4);
+	
 	
 	//private static GcmClientRequest instance = new GcmClientRequest();
 	/*
@@ -88,16 +100,61 @@ public class GcmClientRequest {
 		return gcmClient;
 	}
 	
-	public GcmResponse sendGcmMessage(String action, String username, UserType userTrigger,
-			List<String> regIds, List<String> extraLogInfo){
+	public GcmResponse sendGcmMessage(String action, String username, UserType sender,
+			List<String> regIds, String extraLogInfo){
 				
-		GcmResponse gcmResponse = postMessage(action, username, userTrigger, regIds, extraLogInfo);
+		GcmResponse gcmResponse = postMessage(action, username, sender, regIds, extraLogInfo);
+		
+		//canonical handling
+		if(gcmResponse != null) {
+			// try to extract canonical
+			if(Integer.valueOf(gcmResponse.canonical_ids) != null){
+				int canonical_ids = Integer.valueOf(gcmResponse.canonical_ids);
+				System.out.print(String.format("user_reg_ids: %s\n",regIds.toString()));
+				System.out.print(String.format("canonical_ids COUNT: %d\n",canonical_ids));
+				if(canonical_ids > 0) {						
+					for(int idx = 0; idx < gcmResponse.results.size(); idx++){
+						final String canonicalId = gcmResponse.results.get(idx).getRegistration_id();
+						if((canonicalId != null) && 
+								!canonicalId.isEmpty()){
+							String gcmIdtoUpdate = regIds.get(idx);
+							switch(sender){							
+								case PATIENT:
+									Collection<Doctor> doctorList = doctors.findByGcmRegistrationId(gcmIdtoUpdate);
+									System.out.print(String.format("doctors.findByGcmRegistrationId: %d-canonical:%s\n",doctorList.size(),gcmResponse.results.get(idx).getRegistration_id()));
+									for(Doctor doctor : doctorList){
+										List<String> gcmDoctorIds = Lists.newArrayList(doctor.getGcmRegistrationIds());
+										gcmDoctorIds.remove(gcmIdtoUpdate);
+										gcmDoctorIds.add(gcmResponse.results.get(idx).getRegistration_id());
+										doctor.setGcmRegistrationIds(gcmDoctorIds);
+										PMF.get().getPersistenceManager().close();
+									}
+								break;
+								case DOCTOR:
+									Collection<Patient> patientList = patients.findByGcmRegistrationId(gcmIdtoUpdate);
+									System.out.print(String.format("patients.findByGcmRegistrationId: %d-canonical:%s\n",patientList.size(),gcmResponse.results.get(idx).getRegistration_id()));
+									for(Patient patient : patientList){
+										List<String> gcmDoctorIds = Lists.newArrayList(patient.getGcmRegistrationIds());
+										gcmDoctorIds.remove(gcmIdtoUpdate);
+										gcmDoctorIds.add(gcmResponse.results.get(idx).getRegistration_id());
+										patient.setGcmRegistrationIds(gcmDoctorIds);
+										PMF.get().getPersistenceManager().close();
+									}									
+									break;
+							default:
+								break;
+							}
+						}												
+					}						
+				}						
+			}
+		}	
 		
 		return gcmResponse;
 	}
 	
 	private GcmResponse postMessage(String action, String username, UserType userTrigger,
-			List<String> regIds, List<String> extraLogInfo){
+			List<String> regIds, String extraLogInfo){
 		
 		GcmResponse gcmResponse = null;
 		//------------------------------GCM notification generation----------------------------------------//

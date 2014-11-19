@@ -37,10 +37,15 @@ public class CheckIn {
     private String patientMedicalNumber;
 	
 	@Persistent
+	private String imageUrl;
+	
+	/*
+	@Persistent
 	public Blob image;
     
 	@NotPersistent
 	private String throatImageEncoded;
+	*/
 
 	@Persistent(embeddedElement = "true", serialized = "true", defaultFetchGroup="true") 
 	@Element(embedded="true") 
@@ -96,13 +101,21 @@ public class CheckIn {
 	public void addQuestions(Question question) {
 		this.questions.add(question);
 	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
+	/*
 	public String getThroatImageEncoded() {
 		return throatImageEncoded;
 	}
 	public void setThroatImageEncoded(String throatImageEncoded) {
 		this.throatImageEncoded = throatImageEncoded;
 	}
+	*/
 
     
 }

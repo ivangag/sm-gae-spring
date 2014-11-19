@@ -173,7 +173,8 @@ public class AdminEndPoint {
 						break;
 					}
 				}
-				if(!exist){
+				if( (!exist) 
+						&& (p != null)){
 					doctor.addPatient(patient.getMedicalRecordNumber());
 					p.addDoctor(doctor.getUniqueDoctorId());
 					//doctors.save(doctor);
