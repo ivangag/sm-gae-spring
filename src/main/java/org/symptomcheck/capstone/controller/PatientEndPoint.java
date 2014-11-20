@@ -82,7 +82,6 @@ public class PatientEndPoint {
 
 		final String username = User.getName();
 		
-		painMedication.setPatientMedicalNumber(medicalRecordNumber);
 		PainMedication medicine =  medications.save(painMedication);
 		
 		List<String> patients_reg_ids = new ArrayList<String>();
