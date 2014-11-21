@@ -17,6 +17,9 @@ public class PainMedication {
 	private Key key;
 
 	@Persistent
+	private String productId;
+	
+	@Persistent
 	private String medicationName;
 	@Persistent
 	private String lastTakingDateTime;
@@ -53,5 +56,13 @@ public class PainMedication {
 	}
 	public void setPatientMedicalNumber(String patientMedicalNumber) {
 		this.patientMedicalNumber = patientMedicalNumber;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 }

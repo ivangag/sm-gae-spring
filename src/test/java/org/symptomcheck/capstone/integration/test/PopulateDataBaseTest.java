@@ -321,10 +321,12 @@ public class PopulateDataBaseTest {
 	public void addPainMedications(){
 		//this.addPatientToDoctor();
 		this.sendGCMRegIdToPatients();
-		PainMedication painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), 
-				new PainMedication("LORTAB"));		
-		painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), 
-				new PainMedication("OXYTUI"));				
+		PainMedication med = new PainMedication("LORTAB");
+		med.setProductId(UUID.randomUUID().toString());
+		PainMedication painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), med);		
+		med = new PainMedication("OXYTUI");
+		med.setProductId(UUID.randomUUID().toString());		
+		painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), med);				
 		
 		//List<PainMedication> painMeds = (List<PainMedication>) 
 		List<PainMedication> painMeds  = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient1User.getMedicalRecordNumber());

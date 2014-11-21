@@ -68,6 +68,7 @@ public class SymptomTestData {
 			Map<String,String> Medications){
 	
 			CheckIn checkIn = new CheckIn(timestamp.toString(),painLevel,feedStatus);
+			checkIn.setUnitId(UUID.randomUUID().toString());
 			for(String medication : Medications.keySet()){
 				Question question = new Question(String.format("Did you Take %s ?", medication), Medications.get(medication), 
 						QuestionType.Medication, timestamp.toString());
@@ -87,14 +88,7 @@ public class SymptomTestData {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
-		
-			
-		/*Question question1 = new Question("Did you Take Lortan?","YES",QuestionType.Medication,timestamp.toString());
-		Question question2 = new Question("Did you Take Oxytocin?","NO",QuestionType.Medication,timestamp.toString());
-		Question question3 = new Question("Did you Take Mosticotol?","NO",QuestionType.Medication,timestamp.toString());
-		checkIn.addQuestions(question1);
-		checkIn.addQuestions(question2);
-		checkIn.addQuestions(question3);*/
+	
 		return checkIn;
 	}
 	

@@ -24,6 +24,10 @@ public class CheckIn {
 	//private String key;
 	private Key key;
 
+	
+	@Persistent
+	private String unitId;
+	
 	@Persistent
     private PainLevel issuePainLevel = PainLevel.UNKNOWN;
 
@@ -106,6 +110,12 @@ public class CheckIn {
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getUnitId() {
+		return unitId;
+	}
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 
 	/*
