@@ -86,8 +86,16 @@ public class PatientEndPoint {
 		
 		List<String> patients_reg_ids = new ArrayList<String>();
 		StringBuilder patientsInfo = new StringBuilder();
-		List<Patient> patientList = (List<Patient>) patients.findByDoctorUniqueId(username);
+		
+		Patient patient = patients.findOne(username);
+		if((patient != null)
+				&& !patient.getGcmRegistrationIds().isEmpty()){
+			
+			patients_reg_ids.addAll(patient.getGcmRegistrationIds());
+		}
 		//GCM handling
+		/*
+		List<Patient> patientList = (List<Patient>) patients.findByDoctorUniqueId(username);
 		if(!patientList.isEmpty()){
 			for(Patient patient : patientList){
 				for(String regId : patient.getGcmRegistrationIds()){
@@ -96,6 +104,7 @@ public class PatientEndPoint {
 				patientsInfo.append(patient.toString()).append(" - ");
 			}
 		}
+		*/
 		if(!patients_reg_ids.isEmpty()){
 			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_RX, 
 					username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
