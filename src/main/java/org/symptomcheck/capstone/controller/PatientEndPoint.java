@@ -1,16 +1,9 @@
 package org.symptomcheck.capstone.controller;
 
 import java.security.Principal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,30 +19,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.symptomcheck.capstone.auth.User;
-import org.symptomcheck.capstone.auth.UserRepository;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
 import org.symptomcheck.capstone.gcm.GcmClientRequest;
 import org.symptomcheck.capstone.gcm.GcmConstants;
-import org.symptomcheck.capstone.gcm.GcmData;
-import org.symptomcheck.capstone.gcm.GcmMessage;
-import org.symptomcheck.capstone.gcm.GcmResponse;
 import org.symptomcheck.capstone.repository.CheckIn;
 import org.symptomcheck.capstone.repository.CheckInRepository;
 import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.DoctorRepository;
-import org.symptomcheck.capstone.repository.GcmTrack;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
-import org.symptomcheck.capstone.repository.PMF;
 import org.symptomcheck.capstone.repository.PainMedication;
 import org.symptomcheck.capstone.repository.PainMedicationRepository;
 import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
-
-import com.google.api.client.util.Base64;
-import com.google.api.client.util.Lists;
-import com.google.appengine.api.datastore.Blob;
 
 @Controller
 public class PatientEndPoint {
@@ -149,19 +131,12 @@ public class PatientEndPoint {
 		return check;
 	}
 	
+	
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"}) 
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins/search", method=RequestMethod.GET)		
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatient(
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber){		
 		List<CheckIn> checks = (List<CheckIn>) checkIns.findByPatientMedicalNumber(medicalRecordNumber);
-		/*
-		List<CheckIn> checkInsRes = Lists.newArrayList();
-		for(CheckIn checkIn : checks){
-			CheckIn chk = checkIn;
-			//chk.setThroatImageEncoded(Base64.encodeBase64String(chk.image.getBytes()));
-			checkInsRes.add(chk);
-		}
-		*/
 		return checks;
 	}
 	

@@ -45,5 +45,13 @@ public class PatientRepository extends JDOCrudRepository<Patient, String>{
 		query.setFilter("gcmRegistrationIds.contains(n)");
 		query.declareParameters("String n");
 		return (List<Patient>)query.execute(regId);	
+	}
+
+	
+	public List<Patient> findByFirstNameAndLastName(String patientFirstName, String patientLastName) {
+		Query query = PMF.get().getPersistenceManager().newQuery(Patient.class);
+		query.setFilter("firstName == n1 && lastName == n2");
+		query.declareParameters("String n1,String n2");
+		return (List<Patient>) query.execute(patientFirstName,patientLastName);	
 	}		
 }

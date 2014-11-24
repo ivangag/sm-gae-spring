@@ -2,6 +2,9 @@ package org.symptomcheck.capstone.client;
 
 import java.util.Collection;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.symptomcheck.capstone.repository.CheckIn;
 import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.PainMedication;
@@ -16,6 +19,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface SymptomManagerSvcApi {
 	
@@ -81,6 +85,13 @@ public interface SymptomManagerSvcApi {
 			@Path("medicalRecordNumber") String medicalCardNumber);	
 	
 	//----------------- DOCTOR methods ----------------- //	
+	
+	@GET(DOCTOR_SVC_PATH + "/{uniqueDoctorID}/patients/checkins/searchByPatientName")
+	public @ResponseBody Collection<CheckIn> findCheckInsByPatientName(
+			@Path("uniqueDoctorID") String uniqueDoctorID,
+			@Query("firstName") String patientFirstName,
+			@Query("lastName") String patientLastName);
+			
 	@GET(DOCTOR_SVC_PATH + "/{uniqueDoctorID}")
 	public Doctor findDoctorByUniqueDoctorID(@Path("uniqueDoctorID") String uniqueDoctorID);
 	

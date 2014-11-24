@@ -299,14 +299,15 @@ public class PopulateDataBaseTest {
 	//@Test
 	public void addPatientToRemote(){
 		
-		patient4User.setFirstName("patient4_New_Name");
+		patient1User.setFirstName("Gianni");
+		patient1User.setLastName("Lo Russo");
 		try{		
-		Patient patient4 = symptomSvcAsPatient1Trusted.addPatient(patient4User);
-		Patient patient1 = symptomSvcAsPatient1Trusted.addPatient(patient1User);
-		Patient patient2 = symptomSvcAsPatient1Trusted.addPatient(patient2User);
-		Patient patient3 = symptomSvcAsPatient1Trusted.addPatient(patient3User);
+		Patient patient4 = symptomSvcAsPatient1.addPatient(patient1User);
+		//Patient patient1 = symptomSvcAsPatient1.addPatient(patient1User);
+		//Patient patient2 = symptomSvcAsPatient1.addPatient(patient2User);
+		//Patient patient3 = symptomSvcAsPatient1.addPatient(patient3User);
 		
-		Collection<Patient> patients= symptomSvcAsPatient1Trusted.getPatientList();
+		Collection<Patient> patients= symptomSvcAsPatient1.getPatientList();
 		}catch(Exception e){
 			
 		}
@@ -317,7 +318,7 @@ public class PopulateDataBaseTest {
 		//doctor = symptomSvcASDoctor2.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient3);
 		
 	}
-	@Test
+	//@Test
 	public void addPainMedications(){
 		//this.addPatientToDoctor();
 		this.sendGCMRegIdToPatients();
@@ -551,4 +552,14 @@ public class PopulateDataBaseTest {
 	public void login(){
 		UserInfo user = symptomSvcAsPatient1.verifyUser();		
 	}
+	
+	@Test
+	public void searchByPatientName(){
+		
+	 List<CheckIn> checkins = (List<CheckIn>) symptomSvcASDoctor1.findCheckInsByPatientName(doctor1User.getUniqueDoctorId(),
+				"Gianni", "Lo Russo");
+	 if(!checkins.isEmpty()){
+		 
+	 }
+	} 
 }
