@@ -163,25 +163,15 @@ public class AdminEndPoint {
 	public @ResponseBody Doctor addPatientToDoctor(
 			@PathVariable("uniqueDoctorID") String uniqueDoctorId, 
 			@RequestBody Patient patient){	
-			Doctor doctor = doctors.findOne(uniqueDoctorId);
+			Doctor d = doctors.findOne(uniqueDoctorId);
 			Patient p = patients.findOne(patient.getMedicalRecordNumber());
-			if((doctor != null)){				
-				boolean exist = false;
-				for(String p2 : doctor.getPatients()){
-					if(p2.equals(patient.getMedicalRecordNumber())){
-						exist = true;
-						break;
-					}
-				}
-				if( (!exist) 
-						&& (p != null)){
-					doctor.addPatient(patient.getMedicalRecordNumber());
-					p.addDoctor(doctor.getUniqueDoctorId());
-					//doctors.save(doctor);
-					PMF.get().getPersistenceManager().close();
-				}
+			if((d != null)
+					&& (p != null)){
+				d.addPatient(patient.getMedicalRecordNumber());
+				p.addDoctor(d.getUniqueDoctorId());	
+				PMF.get().getPersistenceManager().close();
 			}
-			return doctor;
+			return d;
 	}
 	
 	@RequestMapping(value=SymptomManagerSvcApi.DOCTOR_SVC_PATH, method=RequestMethod.POST)

@@ -23,6 +23,12 @@ public class Doctor{
 	@Persistent
 	//private List<String> gcmRegistrationIds = Lists.newArrayList();
 	private Set<String> gcmRegistrationIds = new HashSet<String>();
+	
+	@Persistent
+	private String email;
+
+	@Persistent
+	private String phoneNumber;
 		
 	public Doctor(){}
 	public Doctor(String uniqueDoctorId, String firstName, String lastName) {
@@ -98,5 +104,21 @@ public class Doctor{
 		if(this.gcmRegistrationIds.contains(gcmRegistrationId)) {
 			this.gcmRegistrationIds.remove(gcmRegistrationId);
 		}		
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 }

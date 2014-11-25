@@ -152,12 +152,13 @@ public class PopulateDataBaseTest {
 	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.FULL).build()
 	.create(SymptomManagerSvcApi.class);		
 	
-	Patient patient1User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_1, "Mario", "Milone");
+	Patient patient1User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_1, "David", "Malone");
 	Patient patient2User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_2, "Alfredo", "Acquasanta");
 	Patient patient3User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_3, "Gianni", "Pasquale");
 	Patient patient4User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_4, "Armando", "LaRocca");
 	Doctor doctor1User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_1, "Gianni", "Belmondo");
 	Doctor doctor2User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_2, "Armando", "Della Torre");
+	Doctor doctor3User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_3, "Armando", "Della Torre");
 	
 /*	
 	//@Test
@@ -277,10 +278,10 @@ public class PopulateDataBaseTest {
 	public void addPatient(){
 		
 		try{		
-		Patient patient4 = symptomSvcAsPatient1.addPatient(patient4User);
+		//Patient patient4 = symptomSvcAsPatient1.addPatient(patient4User);
 		Patient patient1 = symptomSvcAsPatient1.addPatient(patient1User);
-		Patient patient2 = symptomSvcAsPatient1.addPatient(patient2User);
-		Patient patient3 = symptomSvcAsPatient1.addPatient(patient3User);
+		//Patient patient2 = symptomSvcAsPatient1.addPatient(patient2User);
+		//Patient patient3 = symptomSvcAsPatient1.addPatient(patient3User);
 		
 		Collection<Patient> patients= symptomSvcAsPatient1.getPatientList();
 		}catch(Exception e){
@@ -450,7 +451,7 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	//@Test
+	@Test
 	public void addPatientToDoctor(){
 		Doctor doctor2;// = symptomSvcASDoctor1.addDoctor(doctor2User);
 		//Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);
@@ -460,10 +461,12 @@ public class PopulateDataBaseTest {
 		//symptomSvcAsPatient1.addPatient(patient4User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient1User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient2User);
-		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient1User);
-		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient2User);
 		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient3User);
-		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient4User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient4User);		
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient2User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient2User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient4User);
+		doctor2 = symptomSvcASDoctor1.addPatientToDoctor(doctor3User.getUniqueDoctorId(), patient4User);
 	}
 	
 	//@Test
@@ -553,7 +556,7 @@ public class PopulateDataBaseTest {
 		UserInfo user = symptomSvcAsPatient1.verifyUser();		
 	}
 	
-	@Test
+	//@Test
 	public void searchByPatientName(){
 		
 	 List<CheckIn> checkins = (List<CheckIn>) symptomSvcASDoctor1.findCheckInsByPatientName(doctor1User.getUniqueDoctorId(),

@@ -30,6 +30,7 @@ public interface SymptomManagerSvcApi {
 	
 	public static final String DOCTOR_ID_1 = "doctor001";
 	public static final String DOCTOR_ID_2 = "doctor002";
+	public static final String DOCTOR_ID_3 = "doctor003";
 	
 	public static final String DOCTOR_SEARCH_BY_PATIENT_PATH = SymptomManagerSvcApi.DOCTOR_SVC_PATH + "/search/findByPatient";
 	

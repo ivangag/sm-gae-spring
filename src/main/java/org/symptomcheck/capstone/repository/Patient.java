@@ -34,7 +34,13 @@ public class Patient {
 	@Persistent
 	private String birthDate;
 	
+	@Persistent
+	private String email;
 
+	@Persistent
+	private String phoneNumber;
+
+	
 	public Patient() {
 	}
 	
@@ -162,5 +168,21 @@ public class Patient {
 		if(this.gcmRegistrationIds.contains(gcmRegistrationId)) {
 			this.gcmRegistrationIds.remove(gcmRegistrationId);
 		}		
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 }
