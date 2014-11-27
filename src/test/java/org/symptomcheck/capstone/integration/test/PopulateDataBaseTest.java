@@ -138,7 +138,7 @@ public class PopulateDataBaseTest {
 	.setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
 	.setErrorHandler(error)
 	//.setClient(new ApacheClient())
-	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.FULL).build()
+	.setEndpoint(TEST_URL_LOCAL_TRUSTED).setLogLevel(LogLevel.NONE).build()
 	.create(SymptomManagerSvcApi.class);	
 	
 	private SymptomManagerSvcApi symptomSvcASDoctor2 = new SecuredRestBuilder()
@@ -322,13 +322,25 @@ public class PopulateDataBaseTest {
 	//@Test
 	public void addPainMedications(){
 		//this.addPatientToDoctor();
-		this.sendGCMRegIdToPatients();
+		//this.sendGCMRegIdToPatients();
 		PainMedication med = new PainMedication("LORTAB");
 		med.setProductId(UUID.randomUUID().toString());
 		PainMedication painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), med);		
 		med = new PainMedication("OXYTUI");
 		med.setProductId(UUID.randomUUID().toString());		
 		painMed = symptomSvcASDoctor1.addPainMedication(patient2User.getMedicalRecordNumber(), med);				
+		
+		//List<PainMedication> painMeds = (List<PainMedication>) 
+		List<PainMedication> painMeds  = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient1User.getMedicalRecordNumber());
+	}
+	
+	@Test
+	public void deletePainMedications(){
+		//this.addPatientToDoctor();
+		//this.sendGCMRegIdToPatients();
+		PainMedication med = new PainMedication("LORTAB");
+		med.setProductId("f5e2ecd2-1f96-49bf-bc57-a4514b6d09eb");		
+		boolean res = symptomSvcASDoctor1.deletePainMedication(patient1User.getMedicalRecordNumber(),med.getProductId());	
 		
 		//List<PainMedication> painMeds = (List<PainMedication>) 
 		List<PainMedication> painMeds  = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient1User.getMedicalRecordNumber());
@@ -451,7 +463,7 @@ public class PopulateDataBaseTest {
 		
 	}	
 	
-	@Test
+	//@Test
 	public void addPatientToDoctor(){
 		Doctor doctor2;// = symptomSvcASDoctor1.addDoctor(doctor2User);
 		//Doctor doctor1 = symptomSvcASDoctor1.addDoctor(doctor1User);

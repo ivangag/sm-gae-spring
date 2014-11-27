@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
 import org.symptomcheck.capstone.gcm.GcmClientRequest;
@@ -27,6 +29,7 @@ import org.symptomcheck.capstone.repository.CheckInRepository;
 import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.DoctorRepository;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
+import org.symptomcheck.capstone.repository.PMF;
 import org.symptomcheck.capstone.repository.PainMedication;
 import org.symptomcheck.capstone.repository.PainMedicationRepository;
 import org.symptomcheck.capstone.repository.Patient;
@@ -53,7 +56,34 @@ public class PatientEndPoint {
 	@Autowired 
 	GcmClientRequest gcmClientRequest;
 	
+	@Secured("ROLE_DOCTOR")
+	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/delete", method=RequestMethod.DELETE)		
+	public @ResponseBody boolean deletePainMedication(
+			Principal User,
+			@PathVariable("medicalRecordNumber") String medicalRecordNumber, 
+			@RequestParam(value="medicineProductId", required=true) String medicineProductId){
 
+		boolean found = false;
+		final String username = User.getName();		
+		long deleted =  medications.deleteByProductId(medicineProductId);
+		if(deleted > 0){			
+			//GCM handling
+			List<String> patients_reg_ids = new ArrayList<String>();
+			StringBuilder patientsInfo = new StringBuilder();			
+			Patient patient = patients.findOne(username);
+			if((patient != null)
+					&& !patient.getGcmRegistrationIds().isEmpty()){
+				
+				patients_reg_ids.addAll(patient.getGcmRegistrationIds());
+			}		
+			if(!patients_reg_ids.isEmpty()){
+				gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
+						username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+			}				
+		}		
+		return deleted > 0;
+	}
+	
 	
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
@@ -76,22 +106,10 @@ public class PatientEndPoint {
 			patients_reg_ids.addAll(patient.getGcmRegistrationIds());
 		}
 		//GCM handling
-		/*
-		List<Patient> patientList = (List<Patient>) patients.findByDoctorUniqueId(username);
-		if(!patientList.isEmpty()){
-			for(Patient patient : patientList){
-				for(String regId : patient.getGcmRegistrationIds()){
-					patients_reg_ids.add(regId);
-				}
-				patientsInfo.append(patient.toString()).append(" - ");
-			}
-		}
-		*/
 		if(!patients_reg_ids.isEmpty()){
-			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_RX, 
+			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
 					username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
-		}		
-		
+		}				
 		return medicine;
 	}
 	
@@ -124,9 +142,8 @@ public class PatientEndPoint {
 		}
 		
 		if(!doctors_reg_ids.isEmpty()){
-			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_RX, 
-					username, UserType.PATIENT, doctors_reg_ids, doctorsInfo.toString());
-							
+			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_CHECKIN_UPDATE, 
+					username, UserType.PATIENT, doctors_reg_ids, doctorsInfo.toString());						
 		}
 		return check;
 	}

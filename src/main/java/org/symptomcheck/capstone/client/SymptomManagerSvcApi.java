@@ -16,6 +16,7 @@ import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.UserInfo;
 
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -75,17 +76,23 @@ public interface SymptomManagerSvcApi {
 	
 	@POST(PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins")
 	public CheckIn addCheckIn(@Path("medicalRecordNumber") String medicalCardNumber, @Body CheckIn checkIn);
-	
-	@POST(PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications")
-	public PainMedication addPainMedication(
-			@Path("medicalRecordNumber") String medicalCardNumber,
-			@Body PainMedication painMedication);
 
 	@GET(PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/search")
 	public Collection<PainMedication> findPainMedicationsByPatient(
 			@Path("medicalRecordNumber") String medicalCardNumber);	
 	
 	//----------------- DOCTOR methods ----------------- //	
+	
+	
+	@POST(PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications")
+	public PainMedication addPainMedication(
+			@Path("medicalRecordNumber") String medicalCardNumber,
+			@Body PainMedication painMedication);
+	
+	@DELETE(PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/delete/")
+	public boolean deletePainMedication(
+			@Path("medicalRecordNumber") String medicalCardNumber,
+			@Query("medicineProductId") String medicineProductId);
 	
 	@GET(DOCTOR_SVC_PATH + "/{uniqueDoctorID}/patients/checkins/searchByPatientName")
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatientName(

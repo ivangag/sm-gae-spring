@@ -46,7 +46,7 @@ public class GcmMessagingTest {
 		GcmMessage message = new GcmMessage();
 		message.addRegistrationId(reg_id_test);
 		GcmData dataMsg = new GcmData();
-		dataMsg.setAction(GcmConstants.GCM_ACTION_CHECKIN_RX);
+		dataMsg.setAction(GcmConstants.GCM_ACTION_CHECKIN_UPDATE);
 		dataMsg.setUserName("patient001");
 		dataMsg.setUserType(UserType.PATIENT);
 		message.setData(dataMsg);
