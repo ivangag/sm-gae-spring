@@ -220,7 +220,7 @@ public class OAuth2SecurityConfiguration {
 			ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
 					// Create a client that has "read" and "write" access to the
 			        // video service
-					.withClient("patient").authorizedGrantTypes("password")
+					.withClient("patient").authorizedGrantTypes("password") //TODO#FDAR_1 
 					.authorities("ROLE_PATIENT")
 					.scopes("read","write").resourceIds("video","patient")
 					.and()
@@ -235,6 +235,7 @@ public class OAuth2SecurityConfiguration {
 					.scopes("read").resourceIds("video","patient")
 					.accessTokenValiditySeconds(3600).and().build();
 
+			/*
 			// Create a series of hard-coded users. 
 			UserDetailsService svc = new InMemoryUserDetailsManager(
 					Arrays.asList(
@@ -247,7 +248,7 @@ public class OAuth2SecurityConfiguration {
 							UserInMemory.create(SymptomManagerSvcApi.DOCTOR_ID_2, "pass", "ROLE_DOCTOR"),
 							UserInMemory.create("user2", "pass", "USER"),
 							UserInMemory.create("user5", "pass", "USER")));
-
+			 	*/
 			
 			// Since clients have to use BASIC authentication with the client's id/secret,
 			// when sending a request for a password grant, we make each client a user

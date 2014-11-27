@@ -7,6 +7,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 //TODO#BPR_1
+//TODO#FDAR_1 
 @PersistenceCapable
 public class User implements Serializable{
 
