@@ -63,14 +63,12 @@ public class PatientEndPoint {
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber, 
 			@RequestParam(value="medicineProductId", required=true) String medicineProductId){
 
-		boolean found = false;
-		final String username = User.getName();		
 		long deleted =  medications.deleteByProductId(medicineProductId);
 		if(deleted > 0){			
 			//GCM handling
 			List<String> patients_reg_ids = new ArrayList<String>();
 			StringBuilder patientsInfo = new StringBuilder();			
-			Patient patient = patients.findOne(username);
+			Patient patient = patients.findOne(medicalRecordNumber);
 			if((patient != null)
 					&& !patient.getGcmRegistrationIds().isEmpty()){
 				
@@ -78,7 +76,7 @@ public class PatientEndPoint {
 			}		
 			if(!patients_reg_ids.isEmpty()){
 				gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
-						username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+						medicalRecordNumber, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
 			}				
 		}		
 		return deleted > 0;
@@ -91,15 +89,12 @@ public class PatientEndPoint {
 			Principal User,
 			@PathVariable("medicalRecordNumber") String medicalRecordNumber, 
 			@RequestBody PainMedication painMedication){
-
-		final String username = User.getName();
-		
-		PainMedication medicine =  medications.save(painMedication);
-		
+	
+		PainMedication medicine =  medications.save(painMedication);		
 		List<String> patients_reg_ids = new ArrayList<String>();
 		StringBuilder patientsInfo = new StringBuilder();
 		
-		Patient patient = patients.findOne(username);
+		Patient patient = patients.findOne(medicalRecordNumber);
 		if((patient != null)
 				&& !patient.getGcmRegistrationIds().isEmpty()){
 			
@@ -108,7 +103,7 @@ public class PatientEndPoint {
 		//GCM handling
 		if(!patients_reg_ids.isEmpty()){
 			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
-					username, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+					medicalRecordNumber, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
 		}				
 		return medicine;
 	}
