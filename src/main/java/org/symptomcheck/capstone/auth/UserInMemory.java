@@ -15,6 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserInMemory implements UserDetails {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7679609747845140306L;
+
 	public static UserDetails create(String username, String password,
 			String...authorities) {
 		return new UserInMemory(username, password, authorities);

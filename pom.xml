@@ -22,7 +22,7 @@
 	</pluginRepositories>
 
 	<properties>
-		<appengine.app.version>1</appengine.app.version>
+		<appengine.app.version>0.2</appengine.app.version>
 		<appengine.target.version>1.9.13</appengine.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.0.7.RELEASE</spring.version>

@@ -8,6 +8,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+//TODO#BPR_1
 @PersistenceCapable//(identityType = IdentityType.APPLICATION, detachable = "true")
 public class Doctor{
 	

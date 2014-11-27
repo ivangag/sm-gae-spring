@@ -10,14 +10,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.common.base.Objects;
 
-
+//TODO#BPR_1
 @PersistenceCapable/*(identityType =IdentityType.APPLICATION, detachable = "true")*/
 public class Patient {
-	
-	/*@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Long id;*/
-		
+
 	@PrimaryKey
 	@Persistent
 	private String medicalRecordNumber;
@@ -75,15 +71,7 @@ public class Patient {
 	public void setLastName(String lastName){
 		this.lastName = lastName;
 	}
-/*	
-	public long getId() {
-		return id;
-	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-	*/
 	
 	public Set<String> getDoctors(){
 		return this.doctors;
@@ -98,8 +86,6 @@ public class Patient {
 			this.doctors.add(doctor);
     }
   	@Persistent
-  	//@Unowned
-  	//private List<Patient> patients = new ArrayList<Patient>();
   	private Set<String> doctors = new HashSet<String>();
   	
 	public String getBirthDate() {

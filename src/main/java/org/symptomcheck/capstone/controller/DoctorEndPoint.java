@@ -35,20 +35,8 @@ public class DoctorEndPoint {
 	@Autowired
 	CheckInRepository checkIns;
 	
-	/*
-	@Secured("ROLE_DOCTOR")
-	@RequestMapping(value=SymptomManagerSvcApi.DOCTOR_SEARCH_BY_PATIENT_PATH + "/{medicalRecordNumber}",
-			method=RequestMethod.GET)	
-	public @ResponseBody Collection<Doctor> findDoctorByPatient(@PathVariable("medicalRecordNumber") String medicalCardNumber) {	
-		Collection<Doctor> d1 = new ArrayList<Doctor>();	
-		Collection<Patient> p = patients.findByMedicalRecordNumber(medicalCardNumber);
-		if(!p.isEmpty()){
-			d1 = (Collection<Doctor>) doctors.findByPatients((Patient) p.toArray()[0]);
-		}
-		return d1;
-	}*/
-
-	
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"}) 
 	@RequestMapping(value= SymptomManagerSvcApi.DOCTOR_SVC_PATH + "/{uniqueDoctorID}/patients/checkins/searchByPatientName", method=RequestMethod.GET)		
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatientName(
@@ -66,22 +54,19 @@ public class DoctorEndPoint {
 		return results;
 	}
 	
-	
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value=SymptomManagerSvcApi.DOCTOR_SVC_PATH + "/{uniqueDoctorID}/patients/search", 
 			method=RequestMethod.GET)
 	public @ResponseBody Collection<Patient> findPatientsByDoctor(
 			@PathVariable("uniqueDoctorID") String uniqueDoctorID){
-		//String userName = User.getName();
 		Collection<Patient> patientList = new ArrayList<Patient>();
 		Doctor doctor = doctors.findOne(uniqueDoctorID);
 		if(doctor != null){
-			for(String medicalNumber : doctor.getPatients())
-			{
+			for(String medicalNumber : doctor.getPatients()){
 				patientList.add(patients.findOne(medicalNumber));
-			}
-				
-			//patientList = doctor.getPatients(); 
+			}				
 		}
 		return patientList;
 	}

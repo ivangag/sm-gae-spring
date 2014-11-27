@@ -1,18 +1,5 @@
 package org.symptomcheck.capstone.symptom;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchEvent.Modifier;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,10 +10,7 @@ import org.symptomcheck.capstone.repository.PainLevel;
 import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.Question;
 import org.symptomcheck.capstone.repository.QuestionType;
-import org.symptomcheck.capstone.repository.Video;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 /**
  * This is a utility class to aid in the construction of
@@ -58,7 +42,7 @@ public class SymptomTestData {
 
 	public static Doctor createDummyDoctor(String uniqueDoctorId, String firstName,
 			String lastName) {
-		// TODO Auto-generated method stub
+		
 		return new Doctor(uniqueDoctorId,firstName,lastName);
 	}
 	
@@ -77,17 +61,6 @@ public class SymptomTestData {
 			}
 			final String imageUrl = "https://drive.google.com/open?id=0B0VPaQ9HUIlNUmRETjZ4ZFJ6XzQ&authuser=0";
 			checkIn.setImageUrl(imageUrl);
-			/*
-			Path path = Paths.get("D:/Eclipse_EE_Projects/CapstoneGAE/throat.png");
-			try {
-				byte[] image = Files.readAllBytes(path);
-				if(image.length < 1024*50){
-					checkIn.setThroatImageEncoded(Base64.encodeBase64String(image));
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
 	
 		return checkIn;
 	}

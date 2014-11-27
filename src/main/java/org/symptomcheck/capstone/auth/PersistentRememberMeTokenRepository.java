@@ -17,7 +17,6 @@ public class PersistentRememberMeTokenRepository  implements PersistentTokenRepo
 	
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
-		// TODO Auto-generated method stub
 		System.out.println("!!!createNewToken" + token);
         RememberMeToken newToken = new RememberMeToken(token);
         rememberMeTokenRepositoryImpl.save(newToken);
@@ -26,7 +25,6 @@ public class PersistentRememberMeTokenRepository  implements PersistentTokenRepo
 
 	@Override
 	public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-		// TODO Auto-generated method stub
 		System.out.println("!!!getTokenForSeries" + seriesId);
         RememberMeToken token = rememberMeTokenRepositoryImpl.findBySeries(seriesId);
         return new PersistentRememberMeToken(token.getUsername(), token.getSeries(), token.getTokenValue(), token.getDate());
@@ -34,7 +32,6 @@ public class PersistentRememberMeTokenRepository  implements PersistentTokenRepo
 
 	@Override
 	public void removeUserTokens(String username) {
-		// TODO Auto-generated method stub
 		System.out.println("!!!removeUserTokens" + username);
         List<RememberMeToken> tokens = rememberMeTokenRepositoryImpl.findByUsername(username);
         for(RememberMeToken token : tokens){
@@ -45,7 +42,7 @@ public class PersistentRememberMeTokenRepository  implements PersistentTokenRepo
 
 	@Override
 	public void updateToken(String series, String tokenValue, Date lastUsed) {
-		// TODO Auto-generated method stub
+	
         RememberMeToken token = rememberMeTokenRepositoryImpl.findBySeries(series);
         if (token != null){
             token.setTokenValue(tokenValue);

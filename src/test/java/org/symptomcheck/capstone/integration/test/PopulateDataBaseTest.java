@@ -388,17 +388,7 @@ public class PopulateDataBaseTest {
 		//CheckIn checkInRes =symptomSvcAsPatient1.addCheckIn(patient1User.getMedicalRecordNumber(),checkIn);	
 		@SuppressWarnings("unused")
 		List<CheckIn> checkInsPatient1 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient1User.getMedicalRecordNumber());
-		/*for(CheckIn checkIn2 : checkInsPatient1){
-			try {
-			Path path =	Files.write(
-					Paths.get("D:/img" + checkIn2.getPatientMedicalNumber() + ".png"), 
-			Base64.decodeBase64(checkIn2.getThroatImageEncoded()), 
-						StandardOpenOption.CREATE);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
+
 		List<CheckIn> checkInsPatient2 = (List<CheckIn>) symptomSvcAsPatient1.findCheckInsByPatient(patient2User.getMedicalRecordNumber());
 		meds.clear();
 		meds.put("LOXAN","NO");

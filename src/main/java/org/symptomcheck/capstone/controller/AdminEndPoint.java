@@ -43,6 +43,8 @@ public class AdminEndPoint {
 	@Autowired
 	UserRepository userRepo;
 	
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@RequestMapping(value=SymptomManagerSvcApi.GCM_SVC_PATH, method=RequestMethod.POST)
 	public @ResponseBody boolean sendGCMRegistrationId(
@@ -52,6 +54,8 @@ public class AdminEndPoint {
 			HttpServletResponse response){
 		
 		boolean status = true;
+		//TODO#BPR_1
+		//TODO#BPR_2
 		if(request.isUserInRole("ROLE_PATIENT")){
 			Patient patient = patients.findOne(user.getName());
 			if(patient != null){
@@ -66,6 +70,8 @@ public class AdminEndPoint {
 				response.setStatus(HTTP_NOT_FOUND);
 			}
 		}
+		//TODO#BPR_1
+		//TODO#BPR_2
 		else if(request.isUserInRole("ROLE_DOCTOR")){
 			Doctor doctor = doctors.findOne(user.getName());
 			if(doctor != null){
@@ -93,7 +99,10 @@ public class AdminEndPoint {
 			Principal userPrincipal,
 			HttpServletRequest request){
 		boolean status = true;
-		if(request.isUserInRole("ROLE_PATIENT")){
+
+		//TODO#BPR_1
+		//TODO#BPR_2
+		if(request.isUserInRole("ROLE_PATIENT")){ 
 			Patient patient = patients.findOne(userPrincipal.getName());
 			if(patient != null){				
 				//patient.setGcmRegistrationIds(new ArrayList<String>());
@@ -106,8 +115,7 @@ public class AdminEndPoint {
 					patient.removeGcmRegistrationIds(gcmRegistrationId);
 				}
 				PMF.get().getPersistenceManager().close();
-			}
-		
+			}		
 		}else if(request.isUserInRole("ROLE_DOCTOR")){
 			Doctor doctor = doctors.findOne(userPrincipal.getName());
 			if(doctor != null){
@@ -133,6 +141,8 @@ public class AdminEndPoint {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setLogged(true);
 		userInfo.setUserIdentification(user.getName());
+		//TODO#BPR_1
+		//TODO#BPR_2
 		if(request.isUserInRole("ROLE_PATIENT")){
 			userInfo.setUserType(UserType.PATIENT);
 			Patient p = patients.findOne(user.getName());

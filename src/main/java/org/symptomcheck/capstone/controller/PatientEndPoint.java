@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -29,12 +28,12 @@ import org.symptomcheck.capstone.repository.CheckInRepository;
 import org.symptomcheck.capstone.repository.Doctor;
 import org.symptomcheck.capstone.repository.DoctorRepository;
 import org.symptomcheck.capstone.repository.GcmTrackRepository;
-import org.symptomcheck.capstone.repository.PMF;
 import org.symptomcheck.capstone.repository.PainMedication;
 import org.symptomcheck.capstone.repository.PainMedicationRepository;
 import org.symptomcheck.capstone.repository.Patient;
 import org.symptomcheck.capstone.repository.PatientRepository;
 import org.symptomcheck.capstone.repository.UserType;
+
 
 @Controller
 public class PatientEndPoint {
@@ -56,6 +55,8 @@ public class PatientEndPoint {
 	@Autowired 
 	GcmClientRequest gcmClientRequest;
 	
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/delete", method=RequestMethod.DELETE)		
 	public @ResponseBody boolean deletePainMedication(
@@ -82,7 +83,7 @@ public class PatientEndPoint {
 		return deleted > 0;
 	}
 	
-	
+	//TODO#BPR_1
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
 	public @ResponseBody PainMedication addPainMedication(
@@ -108,10 +109,9 @@ public class PatientEndPoint {
 		//end GCM handling
 		return medicine;
 	}
-	
-	
-	//private final static String gcm_reg_id_doctor_test = "APA91bHNoS19Gz2_Z6VROtXy1-Qo5rya4cTOl8YkVI2L35RupyVhU6L2WyhPR7tKuH2eCD1hFRCBiGkJI8VnBEykJSAwIEZv-ijlI7IeO2rGDQwpCTpWe97rGdZ3FfWtjFMQHLv5cWxoXP4B9eJcQnFF2dokcMoYK9nGUoMWtRZ1LM9QCt7urZw";
-	
+		
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured("ROLE_PATIENT")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins", method=RequestMethod.POST)		
 	public @ResponseBody CheckIn addCheckIn(Principal User, @RequestBody CheckIn checkIn){
@@ -144,7 +144,8 @@ public class PatientEndPoint {
 		return check;
 	}
 	
-	
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"}) 
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/checkins/search", method=RequestMethod.GET)		
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatient(
@@ -154,6 +155,8 @@ public class PatientEndPoint {
 	}
 	
 
+	//TODO#BPR_1
+	//TODO#BPR_2
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/search",
 		method=RequestMethod.GET)		

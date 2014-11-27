@@ -81,7 +81,6 @@ public class GcmClientRequest {
 	}
 	
 	private void init() {
-		// TODO Auto-generated method stub
 		if(gcmClient == null){
 			gcmClient = new RestAdapter.Builder()
 			.setEndpoint(GcmConstants.GCM_MESSAGING_URL)
@@ -119,7 +118,7 @@ public class GcmClientRequest {
 								!canonicalId.isEmpty()){
 							String gcmIdtoUpdate = regIds.get(idx);
 							switch(sender){							
-								case PATIENT:
+								case PATIENT: //TODO#BPR_1
 									Collection<Doctor> doctorList = doctors.findByGcmRegistrationId(gcmIdtoUpdate);
 									System.out.print(String.format("doctors.findByGcmRegistrationId: %d-canonical:%s\n",doctorList.size(),gcmResponse.results.get(idx).getRegistration_id()));
 									for(Doctor doctor : doctorList){
@@ -130,7 +129,7 @@ public class GcmClientRequest {
 										PMF.get().getPersistenceManager().close();
 									}
 								break;
-								case DOCTOR:
+								case DOCTOR: //TODO#BPR_1
 									Collection<Patient> patientList = patients.findByGcmRegistrationId(gcmIdtoUpdate);
 									System.out.print(String.format("patients.findByGcmRegistrationId: %d-canonical:%s\n",patientList.size(),gcmResponse.results.get(idx).getRegistration_id()));
 									for(Patient patient : patientList){

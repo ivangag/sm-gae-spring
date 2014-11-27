@@ -8,7 +8,7 @@ import javax.jdo.Query;
 import org.springframework.stereotype.Service;
 
 
-
+//TODO#BPR_1
 @Service
 public class DoctorRepository extends JDOCrudRepository<Doctor, String>{
 
@@ -47,13 +47,4 @@ public class DoctorRepository extends JDOCrudRepository<Doctor, String>{
 		query.declareParameters("String n");
 		return (List<Doctor>)query.execute(regId);	
 	}	
-	/*
-	public Collection<Doctor> findByPatient(Patient patient) {
-		// TODO Auto-generated method stub
-		//PMF.get().getPersistenceManager().getObjectById(Patient.class, patient.getMedicalRecordNumber());	
-		Query q = PMF.get().getPersistenceManager().newQuery(Doctor.class, "patients == parentKey");
-		q.declareParameters("String parentKey");
-		Key key = KeyFactory.createKey(Patient.class.getSimpleName(), patient.getMedicalRecordNumber());
-		return (List<Doctor>) q.execute(key);		
-	}*/
 }

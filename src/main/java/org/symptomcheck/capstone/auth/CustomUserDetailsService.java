@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 @JsonIgnoreProperties(value="userRepository")
 public class CustomUserDetailsService implements UserDetailsService,Serializable{
 
@@ -32,6 +32,11 @@ public class CustomUserDetailsService implements UserDetailsService,Serializable
 		final User user = userRepository.findOne(username);
 		return new UserDetails() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -273801257212281477L;
+
 			@Override
 			public boolean isEnabled() {
 				return true;
