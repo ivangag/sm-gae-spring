@@ -104,7 +104,8 @@ public class PatientEndPoint {
 		if(!patients_reg_ids.isEmpty()){
 			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
 					medicalRecordNumber, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
-		}				
+		}	
+		//end GCM handling
 		return medicine;
 	}
 	
