@@ -11,6 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.common.base.Objects;
 
 //TODO#BPR_1
+//TODO#FDAR_1
 @PersistenceCapable/*(identityType =IdentityType.APPLICATION, detachable = "true")*/
 public class Patient {
 

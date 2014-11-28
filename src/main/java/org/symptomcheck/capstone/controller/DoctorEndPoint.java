@@ -37,6 +37,7 @@ public class DoctorEndPoint {
 	
 	//TODO#BPR_1
 	//TODO#BPR_2
+	//TODO#FDAR_11 Method used by Doctor to find Check-Ins data by entering Patient FirstName and LastName
 	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"}) 
 	@RequestMapping(value= SymptomManagerSvcApi.DOCTOR_SVC_PATH + "/{uniqueDoctorID}/patients/checkins/searchByPatientName", method=RequestMethod.GET)		
 	public @ResponseBody Collection<CheckIn> findCheckInsByPatientName(

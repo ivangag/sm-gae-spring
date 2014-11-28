@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 
+//TODO#FDAR_3 Check-In unit data define a Patient, Date & Time and Questions Response
 @PersistenceCapable
 @JsonIgnoreProperties({ "key", "image" })
 public class CheckIn {

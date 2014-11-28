@@ -8,7 +8,7 @@ import javax.jdo.Query;
 import org.springframework.stereotype.Service;
 
 
-
+//TODO#FDAR_3 
 @Service
 public class CheckInRepository extends JDOCrudRepository<CheckIn, String>{
 
@@ -17,7 +17,8 @@ public class CheckInRepository extends JDOCrudRepository<CheckIn, String>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<CheckIn> findByPatientMedicalNumber(
+	//TODO#FDAR_11
+	public Collection<CheckIn> findByPatientMedicalNumber( 
 			String medicalRecordNumber) {
 		Query query = PMF.get().getPersistenceManager().newQuery(CheckIn.class);
 		query.setFilter("patientMedicalNumber == n");

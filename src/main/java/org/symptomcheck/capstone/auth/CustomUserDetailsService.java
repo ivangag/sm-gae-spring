@@ -19,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Service
 @Transactional(readOnly = true)
 @JsonIgnoreProperties(value="userRepository")
-public class CustomUserDetailsService implements UserDetailsService,Serializable{//TODO#FDAR_1 
+public class CustomUserDetailsService implements UserDetailsService,Serializable{
+	//TODO#FDAR_1
+	//TODO#FDAR_9
 
 	private static final long serialVersionUID = 7884479538365706760L;
 	@Autowired
@@ -94,7 +96,7 @@ public class CustomUserDetailsService implements UserDetailsService,Serializable
 		List<String> roles = new ArrayList<String>();
 		
 		if (isAdmin.intValue() == 1) {
-			roles.add("ROLE_" + role.toUpperCase()); //TODO#FDAR_1 
+			roles.add("ROLE_" + role.toUpperCase()); //TODO#FDAR_1 TODO#FDAR_9 
 			roles.add("ROLE_ADMIN");
 			
 		} else /*if (role.intValue() == 2)*/ {

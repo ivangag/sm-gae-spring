@@ -57,6 +57,7 @@ public class PatientEndPoint {
 	
 	//TODO#BPR_1
 	//TODO#BPR_2
+	//TODO#FDAR_12 
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications/delete", method=RequestMethod.DELETE)		
 	public @ResponseBody boolean deletePainMedication(
@@ -84,6 +85,7 @@ public class PatientEndPoint {
 	}
 	
 	//TODO#BPR_1
+	//TODO#FDAR_12 
 	@Secured("ROLE_DOCTOR")
 	@RequestMapping(value= SymptomManagerSvcApi.PATIENT_SVC_PATH + "/{medicalRecordNumber}/medications", method=RequestMethod.POST)		
 	public @ResponseBody PainMedication addPainMedication(

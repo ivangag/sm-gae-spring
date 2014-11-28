@@ -224,7 +224,7 @@ public class OAuth2SecurityConfiguration {
 					.authorities("ROLE_PATIENT")
 					.scopes("read","write").resourceIds("video","patient")
 					.and()
-					.withClient("doctor").authorizedGrantTypes("password")
+					.withClient("doctor").authorizedGrantTypes("password") //TODO#FDAR_9
 					.authorities("ROLE_DOCTOR")
 					.scopes("read","write").resourceIds("video","patient","doctor")					
 					.and()					

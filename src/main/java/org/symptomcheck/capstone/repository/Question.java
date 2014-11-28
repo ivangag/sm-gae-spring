@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.appengine.api.datastore.Key;
 
 
+
+//TODO#FDAR_3 Questions Response associated to a Chec-In unit data
 @PersistenceCapable
 @EmbeddedOnly
 @JsonIgnoreProperties("key")

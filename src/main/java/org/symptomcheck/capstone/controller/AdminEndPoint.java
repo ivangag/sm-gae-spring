@@ -243,7 +243,7 @@ public class AdminEndPoint {
 		return (Collection<Patient>) patients.findAll();
 	}
 	
-	@RequestMapping(value = "/createAccount/{username}", method=RequestMethod.GET)	//TODO#FDAR_1 
+	@RequestMapping(value = "/createAccount/{username}", method=RequestMethod.GET)	//TODO#FDAR_1 TODO#FDAR_9
 	public @ResponseBody User initAccounts(
 			@PathVariable("username") String username) {		
 		Patient patient = null;

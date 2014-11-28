@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
 
-
+//TODO#FDAR_12 
 @Service
 public class PainMedicationRepository extends JDOCrudRepository<PainMedication, String>{
 
@@ -28,6 +28,7 @@ public class PainMedicationRepository extends JDOCrudRepository<PainMedication, 
 		return (List<PainMedication>)query.execute(medicalRecordNumber);	
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Collection<PainMedication> findByProductId(String productId) {
 		Query query = PMF.get().getPersistenceManager().newQuery(PainMedication.class);
 		query.setFilter("productId == n");
@@ -35,11 +36,7 @@ public class PainMedicationRepository extends JDOCrudRepository<PainMedication, 
 		return (List<PainMedication>)query.execute(productId);	
 	}
 	
-	/**
-	 * Deletes the {@link GaeOAuthToken} entities with the given token ID.
-	 * @param tokenId Token ID.
-	 * @return Number of {@link GaeOAuthToken} entities that were deleted.
-	 */
+
 	public long deleteByProductId(String productId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = null;
@@ -55,21 +52,5 @@ public class PainMedicationRepository extends JDOCrudRepository<PainMedication, 
 			pm.close();
 		}
 	}	
-	/*
-	@SuppressWarnings("unchecked")
-	public Collection<PainMedication> findByProductId(String productId) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = null;
-		try {
-			query = pm.newQuery(PainMedication.class);
-			query.setFilter("productId == param");
-			query.declareParameters("String param");
-		    return (Collection<PainMedication>) query.execute(productId);
-		} finally {
-			if (query != null) {
-				query.closeAll();
-			}
-			pm.close();
-		}	
-	}*/
+
 }

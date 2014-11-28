@@ -69,7 +69,7 @@
 	</servlet-mapping>
 	
 	
-	  
+	<!-- TODO#BPR_14 here we tells to Google App Engine to work only vi HTTPS --> 
 	<security-constraint>
         <web-resource-collection>
             <web-resource-name>profile</web-resource-name>
