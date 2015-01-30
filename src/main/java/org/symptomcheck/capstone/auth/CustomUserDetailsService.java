@@ -32,6 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService,Serializable
 			throws UsernameNotFoundException {
 		
 		final User user = userRepository.findOne(username);
+		System.out.println("CustomUserDetailsService.loadUserByUsername => username: " + username + " user:" + user.toString());
 		return new UserDetails() {
 			
 			/**

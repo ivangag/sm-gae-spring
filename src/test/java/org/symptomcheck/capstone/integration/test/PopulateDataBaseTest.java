@@ -334,7 +334,7 @@ public class PopulateDataBaseTest {
 		List<PainMedication> painMeds  = (List<PainMedication>) symptomSvcASDoctor1.findPainMedicationsByPatient(patient1User.getMedicalRecordNumber());
 	}
 	
-	@Test
+	//@Test
 	public void deletePainMedications(){
 		//this.addPatientToDoctor();
 		//this.sendGCMRegIdToPatients();
@@ -505,7 +505,7 @@ public class PopulateDataBaseTest {
 		//symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
 	}	
 	
-	//@Test
+	@Test
 	public void loginAndSynchronizationFlow(){
 		
 		//**********PATIENT*****************///

@@ -50,7 +50,12 @@ public class ClientAndUserDetailsService implements UserDetailsService,
 	public ClientDetails loadClientByClientId(String clientId)
 			throws ClientRegistrationException {
 		System.out.println("!!!ClientDetails loadClientByClientId(String clientId)" + clientId + " PRINCIPAL: " + getPrincipal());
-		return clients_.loadClientByClientId(clientId);
+		final ClientDetails clientDetails = clients_.loadClientByClientId(clientId);
+		if(clientDetails != null)
+			System.out.println("!!!ClientAndUserDetailsService.loadClientByClientId(String clientId) = " + clientDetails.toString());
+		else
+			System.out.println("!!!ClientAndUserDetailsService.loadClientByClientId(String clientId) = NULL!!!");
+		return clientDetails;
 	}
 	
 	@Override
@@ -75,7 +80,7 @@ public class ClientAndUserDetailsService implements UserDetailsService,
 	
     public static String getPrincipal() {
     	if(SecurityContextHolder.getContext().getAuthentication() != null){
-        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    		Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
  
         if (obj instanceof UserDetails) {
             return ((UserDetails) obj).getUsername();

@@ -69,7 +69,7 @@
 	</servlet-mapping>
 	
 	
-	<!-- TODO#BPR_14 here we tells to Google App Engine to work only vi HTTPS --> 
+	<!-- TODO#BPR_14 here we tells to Google App Engine to work only via HTTPS --> 
 	<security-constraint>
         <web-resource-collection>
             <web-resource-name>profile</web-resource-name>
@@ -80,4 +80,7 @@
         </user-data-constraint>
     </security-constraint>	
 
+	<session-config>
+      <session-timeout>-1</session-timeout> 
+	</session-config> 
 </web-app>

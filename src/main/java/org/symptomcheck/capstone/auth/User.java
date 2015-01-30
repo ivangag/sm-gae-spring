@@ -61,5 +61,18 @@ public class User implements Serializable{
 		this.isAdmin = isAdmin;
 	}
 	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		return sb.append("username:").append(username)
+				.append(". ")
+				.append("password:").append(password)
+				.append(". ")
+				.append("role:").append(role)
+				.append(". ")
+				.append("isAdmin:").append(isAdmin)		
+				.toString();
+		
+	}
 	public User(){}
 }

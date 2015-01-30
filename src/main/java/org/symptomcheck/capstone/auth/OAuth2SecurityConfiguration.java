@@ -15,8 +15,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
+import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -70,6 +72,7 @@ public class OAuth2SecurityConfiguration {
 	    {
 	        webSecurity.ignoring().antMatchers("/_ah/**");
 	        webSecurity.ignoring().antMatchers("/createAccount/**");
+	        webSecurity.ignoring().antMatchers("/createClient/**");
 	    }
 
 		/*
@@ -188,14 +191,25 @@ public class OAuth2SecurityConfiguration {
 		@Autowired 
 		private CustomUserDetailsService userStoredDetailsService;
 		
+		@Autowired 
+		private GaeClientDetailsService clientStoredDetailsService;
+		
 		@Autowired
 	    private TokenStore tokenStore;
 		
 
-	   @Bean
+		@Bean
 	    public TokenStore tokenStore() {
 	        return new GaeTokenStore();
 	    }
+		
+		// Create a service that has the credentials for all our clients
+		ClientDetailsService gae_csvc =  new  GaeClientDetailsService.Builder()			
+				.authorizedGrantTypes("password")
+				.resourceIds("patient","doctor")
+				.authorities("ROLE_DOCTOR","ROLE_PATIENT","ROLE_CLIENT")
+				.scopes("read","write").build();
+		
 		   
 		/**
 		 * 
@@ -216,7 +230,7 @@ public class OAuth2SecurityConfiguration {
 			// would want to change
 			
 			
-			// Create a service that has the credentials for all our clients
+
 			ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
 					// Create a client that has "read" and "write" access to the
 			        // video service
@@ -255,7 +269,7 @@ public class OAuth2SecurityConfiguration {
 			// as well. When the BASIC authentication information is pulled from the
 			// request, this combined UserDetailsService will authenticate that the
 			// client is a valid "user". 
-			combinedService_ = new ClientAndUserDetailsService(csvc, userStoredDetailsService);
+			combinedService_ = new ClientAndUserDetailsService(clientStoredDetailsService, userStoredDetailsService);			
 		}
 
 		/**
@@ -263,7 +277,7 @@ public class OAuth2SecurityConfiguration {
 		 */
 		@Bean
 		public ClientDetailsService clientDetailsService() throws Exception {
-			return combinedService_;
+			return gae_csvc;
 		}
 
 		/**

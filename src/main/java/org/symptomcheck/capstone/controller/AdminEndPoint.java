@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.symptomcheck.capstone.auth.Client;
+import org.symptomcheck.capstone.auth.ClientDetailsRepository;
 import org.symptomcheck.capstone.auth.User;
 import org.symptomcheck.capstone.auth.UserRepository;
 import org.symptomcheck.capstone.client.SymptomManagerSvcApi;
@@ -42,6 +44,9 @@ public class AdminEndPoint {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	ClientDetailsRepository clientsRepo;
 	
 	//TODO#BPR_1
 	//TODO#BPR_2
@@ -199,6 +204,7 @@ public class AdminEndPoint {
 	    return doctor;	 
 	}
 	
+	@Secured({"ROLE_PATIENT", "ROLE_DOCTOR"})
 	@RequestMapping(value=SymptomManagerSvcApi.DOCTOR_SVC_PATH, method=RequestMethod.GET)	
 	public @ResponseBody Collection<Doctor> getDoctorList() {		
 		return (Collection<Doctor>) doctors.findAll();
@@ -245,7 +251,7 @@ public class AdminEndPoint {
 	
 	@RequestMapping(value = "/createAccount/{username}", method=RequestMethod.GET)	//TODO#FDAR_1 TODO#FDAR_9
 	public @ResponseBody User initAccounts(
-			@PathVariable("username") String username) {		
+			@PathVariable("username") String username) {	
 		Patient patient = null;
 		Doctor doctor = null;
 		User user = new User();
@@ -273,5 +279,14 @@ public class AdminEndPoint {
 		}
 		
 		return userOut;
+	}
+	
+	@RequestMapping(value = "/createClient/{clientId}", method=RequestMethod.GET)	//TODO#FDAR_1 TODO#FDAR_9
+	public @ResponseBody Client initClients(			
+			@PathVariable("clientId") String clientId){
+		Client client = new Client();
+		client.setClientId(clientId);
+		client.setClientSecret("");
+		return clientsRepo.save(client);
 	}
 }
