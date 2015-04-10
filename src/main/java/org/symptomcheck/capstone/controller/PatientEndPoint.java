@@ -78,7 +78,7 @@ public class PatientEndPoint {
 			}		
 			if(!patients_reg_ids.isEmpty()){
 				gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
-						medicalRecordNumber, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+						User.getName(), UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
 			}				
 		}		
 		return deleted > 0;
@@ -106,7 +106,7 @@ public class PatientEndPoint {
 		//GCM handling
 		if(!patients_reg_ids.isEmpty()){
 			gcmClientRequest.sendGcmMessage(GcmConstants.GCM_ACTION_MEDICATION_UPDATE, 
-					medicalRecordNumber, UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
+					User.getName(), UserType.DOCTOR, patients_reg_ids, patientsInfo.toString());							
 		}	
 		//end GCM handling
 		return medicine;

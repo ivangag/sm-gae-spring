@@ -41,9 +41,12 @@ public class SymptomTestData {
 	
 
 	public static Doctor createDummyDoctor(String uniqueDoctorId, String firstName,
-			String lastName) {
+			String lastName,String email,String phoneNumber) {
 		
-		return new Doctor(uniqueDoctorId,firstName,lastName);
+		Doctor d = new Doctor(uniqueDoctorId,firstName,lastName);
+		d.setEmail(email);
+		d.setPhoneNumber(phoneNumber);
+		return d;
 	}
 	
 	public static CheckIn createDummyCheckIn(Long timestamp, 

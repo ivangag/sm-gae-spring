@@ -195,6 +195,8 @@ public class AdminEndPoint {
 	    if((d != null)){
 	    	d.setFirstName(doctor.getFirstName());
 	    	d.setLastName(doctor.getLastName());
+	    	d.setEmail(doctor.getEmail());
+	    	d.setPhoneNumber(doctor.getPhoneNumber());
 	    	//doctor = doctors.save(d);
 	    	PMF.get().getPersistenceManager().close();
 	    }

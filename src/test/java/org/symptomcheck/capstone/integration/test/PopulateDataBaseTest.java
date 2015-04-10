@@ -72,9 +72,9 @@ public class PopulateDataBaseTest {
         }
     }
     */
-	private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
+	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080";
 	//private final String TEST_URL_LOCAL_TRUSTED = "http://localhost:8080/symptom-management-capstone-0.0.4";
-	//private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
+	private final String TEST_URL_LOCAL_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	private final String TEST_URL_REMOTE_TRUSTED = "https://spring-mvc-capstone-test.appspot.com";
 	
 	private final String USERNAME = "admin";
@@ -156,9 +156,10 @@ public class PopulateDataBaseTest {
 	Patient patient2User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_2, "Alfredo", "Acquasanta");
 	Patient patient3User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_3, "Gianni", "Pasquale");
 	Patient patient4User = SymptomTestData.createDummyPatient(SymptomManagerSvcApi.PATIENT_ID_4, "Armando", "LaRocca");
-	Doctor doctor1User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_1, "Gianni", "Belmondo");
-	Doctor doctor2User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_2, "Armando", "Della Torre");
-	Doctor doctor3User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_3, "Armando", "Della Torre");
+	Doctor doctor1User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_1, "John", "Carson","doctor001@symptomcheck.org","+390113402709");
+	Doctor doctor2User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_2, "Mario", "Raimondi","doctor002@symptomcheck.org","+390113402709");
+	Doctor doctor3User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_3, "Armando", "Della Torre","","");
+	Doctor doctor4User = SymptomTestData.createDummyDoctor(SymptomManagerSvcApi.DOCTOR_ID_4, "Armando", "Della Torre","doctor4@symptomcheck.org","+390113402709");
 	
 /*	
 	//@Test
@@ -415,9 +416,9 @@ public class PopulateDataBaseTest {
 		/*
 		symptomSvcAsPatient2.addPatient(patient2User);
 		symptomSvcAsPatient2.addPatient(patient3User);
-		symptomSvcAsPatient2.addDoctor(doctor1User);
-		symptomSvcAsPatient2.addDoctor(doctor2User);*/
-		
+		symptomSvcAsPatient2.addDoctor(doctor1User);*/
+		symptomSvcAsPatient2.addDoctor(doctor4User);
+		/*
 		UserInfo user = symptomSvcAsPatient2.verifyUser();
 		String userId = user.getUserIdentification();
 		Collection<Patient> patientsOfDoctor;
@@ -450,7 +451,7 @@ public class PopulateDataBaseTest {
 		symptomSvcASDoctor1.sendGCMRegistrationId("gcmRegistrationForDoctor1");
 		//doctor = symptomSvcASDoctor1.addPatientToDoctor(doctor1User.getUniqueDoctorId(), patient2);
 		//doctor = symptomSvcASDoctor2.addPatientToDoctor(doctor2User.getUniqueDoctorId(), patient3);
-		
+		*/
 	}	
 	
 	//@Test
@@ -505,7 +506,7 @@ public class PopulateDataBaseTest {
 		//symptomSvcASDoctor1.sendGCMRegistrationId(gcmRegistrationId);
 	}	
 	
-	@Test
+	//@Test
 	public void loginAndSynchronizationFlow(){
 		
 		//**********PATIENT*****************///
@@ -567,4 +568,12 @@ public class PopulateDataBaseTest {
 		 
 	 }
 	} 
+	
+	@Test
+	public void getAllDoctors(){
+		 symptomSvcAsPatient2.addDoctor(doctor1User);
+		 symptomSvcAsPatient2.addDoctor(doctor2User);
+		 List<Doctor> Doctors = (List<Doctor>) symptomSvcASDoctor1.getDoctorList();
+		 Doctors.get(0);
+	}
 }
